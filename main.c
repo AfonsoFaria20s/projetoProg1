@@ -30,7 +30,7 @@ int main() {
         printf("Nenhum técnico foi carregado.\n");
     }
 
-
+printf("AIIIIIII");
 
     return 0;
 }
