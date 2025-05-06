@@ -4,22 +4,17 @@
 #include "tecnico.h"
 
 typedef struct {
-    char user[100];
+    char username[100];
     char password[50];
-} TECNICO;
-
-typedef struct {
-    char user[100];
-    char password[50];
-} ADMIN;
+} LOGIN;
 
 int main() {
-    // Login stuff
-    TECNICO tecnicoLogin;
+    /*       
+        Inicializar estruturas/listas       
+        ligadas a partir dos ficheiros      
+    */
 
-    // Inicializar estruturas/listas ligadas
-    // a partir dos ficheiros
-    NODE *tecnicos = initTecnicos();
+    NODE *tecnicos = initTecnicos();      
 
     if (tecnicos != NULL) {
         printf("Lista de tecnicos:\n");
@@ -30,7 +25,18 @@ int main() {
         printf("Nenhum técnico foi carregado.\n");
     }
 
-printf("AIIIIIII");
+    // Login Logic
+
+    LOGIN loginData;
+
+    printf("--< Area de Login >--");
+    printf("\nUsername: ");
+    scanf("%s", &loginData.username);
+    if(strcmp(loginData.username, "admin")==0) {
+        // Admin
+    } else {
+        // Tecnico
+    }
 
     return 0;
 }
