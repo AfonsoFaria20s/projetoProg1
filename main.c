@@ -38,5 +38,8 @@ int main() {
         // Tecnico
     }
 
+    printf("Nao sei programar");
     return 0;
+
+
 }
