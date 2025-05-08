@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "tecnico.h"
+#include "tecnico/tecnico.h"
 
 typedef struct {
     char username[100];
@@ -9,35 +9,30 @@ typedef struct {
 } LOGIN;
 
 int main() {
-    /*       
-        Inicializar estruturas/listas       
-        ligadas a partir dos ficheiros      
-    */
+    printf("Iniciando o programa...\n");
 
-    NODE *tecnicos = initTecnicos();      
+    // Inicializar estruturas/listas ligadas a partir dos ficheiros
+    NODE *tecnicos = initTecnicos();
 
     if (tecnicos != NULL) {
-        printf("Lista de tecnicos:\n");
-        printTecnicos(tecnicos);
-
-        freeTecnicos(tecnicos);
+        printf("Lista de técnicos carregada com sucesso.\n");
     } else {
-        printf("Nenhum técnico foi carregado.\n");
+        printf("Erro: Nenhum técnico foi carregado.\n");
     }
 
-    // Login Logic
-
+    // Lógica de Login
     LOGIN loginData;
 
     printf("--< Area de Login >--");
     printf("\nUsername: ");
     scanf("%s", &loginData.username);
-    
     if(strcmp(loginData.username, "admin")==0) {
         // Admin
     } else {
-        // Tecnico
+        printf("Bem-vindo, Técnico!\n");
+        // Lógica para técnico
     }
 
+    printf("Nao sei programar");
     return 0;
 }
