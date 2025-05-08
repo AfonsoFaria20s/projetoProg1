@@ -32,14 +32,12 @@ int main() {
     printf("--< Area de Login >--");
     printf("\nUsername: ");
     scanf("%s", &loginData.username);
+    
     if(strcmp(loginData.username, "admin")==0) {
         // Admin
     } else {
         // Tecnico
     }
 
-    printf("Nao sei programar");
     return 0;
-
-
 }
