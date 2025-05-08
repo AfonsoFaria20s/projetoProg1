@@ -25,14 +25,13 @@ int main() {
 
     printf("--< Area de Login >--");
     printf("\nUsername: ");
-    scanf("%s", &loginData.username);
+    scanf("%s", loginData.username);
     if(strcmp(loginData.username, "admin")==0) {
         // Admin
+        printf("Bem-vindo, Admin!\n");
     } else {
-        printf("Bem-vindo, Técnico!\n");
+        printf("Bem-vindo, Tecnico!\n");
         // Lógica para técnico
     }
-
-    printf("Nao sei programar");
     return 0;
 }
