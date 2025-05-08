@@ -15,9 +15,9 @@ int main() {
     NODE *tecnicos = initTecnicos();
 
     if (tecnicos != NULL) {
-        printf("Lista de técnicos carregada com sucesso.\n");
+        printf("Lista de tecnicos carregada com sucesso.\n");
     } else {
-        printf("Erro: Nenhum técnico foi carregado.\n");
+        printf("Erro: Nenhum tecnico foi carregado.\n");
     }
 
     // Lógica de Login
@@ -30,7 +30,6 @@ int main() {
         // Admin
         printf("Bem-vindo, Admin!\n");
     } else {
-        printf("Bem-vindo, Tecnico!\n");
         // Lógica para técnico
     }
     return 0;
