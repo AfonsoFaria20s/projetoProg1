@@ -4,7 +4,7 @@
 
 #include "admin.h"
 
-// Função para inicializar a lista ligada a partir do ficheiro
+// Funcao para inicializar a lista ligada a partir do ficheiro
 NODE* initAdmins() {
     FILE *fp = fopen("dados\\tecnico_list.dat", "rb");
     if (fp == NULL) {
@@ -12,19 +12,19 @@ NODE* initAdmins() {
         return NULL;
     }
 
-    NODE *head = NULL; // Cabeça da lista ligada
+    NODE *head = NULL; // Cabeca da lista ligada
     NODE *current = NULL;
 
     ADMIN temp;
-    int count = 0; // Contador para técnicos carregados
+    int count = 0; // Contador para admins carregados
 
     while (fread(&temp, sizeof(ADMIN), 1, fp)) {
         // Criar um novo node
         NODE *newNode = (NODE *)malloc(sizeof(NODE));
         if (newNode == NULL) {
-            printf("Erro ao alocar memória para um novo técnico!\n");
+            printf("Erro ao alocar memória para um novo admin!\n");
             fclose(fp);
-            // Liberar memória já alocada
+            // Libertar memoria ja alocada
             while (head != NULL) {
                 NODE *toFree = head;
                 head = head->next;
@@ -33,11 +33,11 @@ NODE* initAdmins() {
             return NULL;
         }
 
-        // Copiar os dados do técnico
+        // Copiar os dados do admin
         newNode->admin = temp;
         newNode->next = NULL;
 
-        // Adicionar o node à lista ligada
+        // Adicionar o node a lista ligada
         if (head == NULL) {
             head = newNode;
         } else {
@@ -50,9 +50,9 @@ NODE* initAdmins() {
     fclose(fp);
 
     if (count == 0) {
-        printf("Nenhum tecnico foi encontrado no ficheiro.\n");
+        printf("Nenhum admin foi encontrado no ficheiro.\n");
     } else {
-        printf("%d tecnico(s) carregado(s) com sucesso.\n", count);
+        printf("%d admin(s) carregado(s) com sucesso.\n", count);
     }
 
     return head;
