@@ -7,11 +7,6 @@ typedef struct {
     char password[50];
 } LOGIN;
 
-void limparBuffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
-
 int main() {
     NODE *tecnicos = initTecnicos();
 
