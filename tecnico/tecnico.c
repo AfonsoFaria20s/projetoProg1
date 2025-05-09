@@ -1,59 +1,93 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include "tecnico.h"
 
-// Função para inicializar a lista ligada a partir do ficheiro
+#define FILE_PATH "dados/tecnico_list.dat"
+
 NODE* initTecnicos() {
-    FILE *fp = fopen("dados\\tecnico_list.dat", "rb");
-    if (fp == NULL) {
-        printf("Erro ao abrir o ficheiro 'tecnico_list.dat'!\n");
-        return NULL;
-    }
+    FILE *fp = fopen(FILE_PATH, "rb");
+    if (!fp) return NULL;
 
-    NODE *head = NULL; // Cabeça da lista ligada
-    NODE *current = NULL;
-
+    NODE *head = NULL, *tail = NULL;
     TECNICO temp;
-    int count = 0; // Contador para técnicos carregados
 
     while (fread(&temp, sizeof(TECNICO), 1, fp)) {
-        // Criar um novo node
-        NODE *newNode = (NODE *)malloc(sizeof(NODE));
-        if (newNode == NULL) {
-            printf("Erro ao alocar memória para um novo técnico!\n");
-            fclose(fp);
-            // Liberar memória já alocada
-            while (head != NULL) {
-                NODE *toFree = head;
-                head = head->next;
-                free(toFree);
-            }
-            return NULL;
-        }
+        NODE *newNode = malloc(sizeof(NODE));
+        if (!newNode) break;
 
-        // Copiar os dados do técnico
         newNode->tecnico = temp;
         newNode->next = NULL;
 
-        // Adicionar o node à lista ligada
-        if (head == NULL) {
-            head = newNode;
-        } else {
-            current->next = newNode;
+        if (!head)
+            head = tail = newNode;
+        else {
+            tail->next = newNode;
+            tail = newNode;
         }
-        current = newNode;
-        count++;
     }
 
     fclose(fp);
+    return head;
+}
 
-    if (count == 0) {
-        printf("Nenhum tecnico foi encontrado no ficheiro.\n");
-    } else {
-        printf("%d tecnico(s) carregado(s) com sucesso.\n", count);
+int isTecnicoRegistered(const char *username, NODE *tecnicos) {
+    while (tecnicos) {
+        if (strcmp(tecnicos->tecnico.user, username) == 0)
+            return 1;
+        tecnicos = tecnicos->next;
+    }
+    return 0;
+}
+
+int registerTecnico(const char *username, const char *password, NODE **tecnicos) {
+    NODE *newNode = malloc(sizeof(NODE));
+    if (!newNode) return 0;
+
+    strncpy(newNode->tecnico.user, username, sizeof(newNode->tecnico.user));
+    strncpy(newNode->tecnico.password, password, sizeof(newNode->tecnico.password));
+    newNode->next = NULL;
+
+    if (!*tecnicos)
+        *tecnicos = newNode;
+    else {
+        NODE *temp = *tecnicos;
+        while (temp->next) temp = temp->next;
+        temp->next = newNode;
     }
 
-    return head;
+    saveTecnicosToFile(*tecnicos);
+    return 1;
+}
+
+void saveTecnicosToFile(NODE *tecnicos) {
+    FILE *fp = fopen(FILE_PATH, "wb");
+    if (!fp) return;
+
+    while (tecnicos) {
+        fwrite(&tecnicos->tecnico, sizeof(TECNICO), 1, fp);
+        tecnicos = tecnicos->next;
+    }
+
+    fclose(fp);
+}
+
+void freeTecnicos(NODE *head) {
+    while (head) {
+        NODE *temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
+int verifyTecnico(char *username, char *password, NODE *tecnicos) {
+    while (tecnicos) {
+        if (strcmp(tecnicos->tecnico.user, username) == 0) {
+            if(strcmp(tecnicos->tecnico.password, password)==0) {
+                return 1;
+            }
+        }
+        tecnicos = tecnicos->next;
+    }
+    return 0;
 }

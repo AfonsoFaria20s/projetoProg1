@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-
 #include "tecnico/tecnico.h"
 
 typedef struct {
@@ -8,29 +7,63 @@ typedef struct {
     char password[50];
 } LOGIN;
 
-int main() {
-    printf("Iniciando o programa...\n");
+void limparBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
 
-    // Inicializar estruturas/listas ligadas a partir dos ficheiros
+int main() {
     NODE *tecnicos = initTecnicos();
 
-    if (tecnicos != NULL) {
-        printf("Lista de tecnicos carregada com sucesso.\n");
+    LOGIN login;
+    char resposta[10];
+
+    printf("\n--< Area de Login >--\nUsername: ");
+    fgets(login.username, sizeof(login.username), stdin);
+    login.username[strcspn(login.username, "\n")] = '\0';
+
+        // LOGICA ADMIN
+    if (strcmp(login.username, "admin") == 0) {
+        printf("\nBem-vindo, Admin!\n");
+
+        // LOGICA TECNICO LOGIN
+    } else if (isTecnicoRegistered(login.username, tecnicos)) {
+        printf("\nPassword: ");
+        fgets(login.password, sizeof(login.password), stdin);
+        login.password[strcspn(login.password, "\n")] = '\0';
+        if(verifyTecnico(login.username,login.password,tecnicos)) {
+            printf("\nBem-Vindo %s!", login.username);
+        } else{
+            printf("\nPalavra passe errada!");
+        }
     } else {
-        printf("Erro: Nenhum tecnico foi carregado.\n");
+
+        // LOGICA TECNICO NAO REGISTADO
+
+        printf("\nNao esta registado. Deseja registar-se? (sim/nao): ");
+        fgets(resposta, sizeof(resposta), stdin);
+        resposta[strcspn(resposta, "\n")] = '\0';
+
+        if (strcmp(resposta, "sim") == 0) {
+            printf("Password (min 5 caracteres): ");
+            fgets(login.password, sizeof(login.password), stdin);
+            login.password[strcspn(login.password, "\n")] = '\0';
+
+            while (strlen(login.password) < 5) {
+                printf("Password muito curta! Tente novamente: ");
+                fgets(login.password, sizeof(login.password), stdin);
+                login.password[strcspn(login.password, "\n")] = '\0';
+            }
+
+            if (registerTecnico(login.username, login.password, &tecnicos))
+                printf("\nTecnico registado com sucesso!\n");
+            else
+                printf("\nErro ao registar tecnico.\n");
+        } else {
+            printf("\nOperacao cancelada.\n");
+        }
     }
 
-    // Lógica de Login
-    LOGIN loginData;
-
-    printf("--< Area de Login >--");
-    printf("\nUsername: ");
-    scanf("%s", loginData.username);
-    if(strcmp(loginData.username, "admin")==0) {
-        // Admin
-        printf("Bem-vindo, Admin!\n");
-    } else {
-        // Lógica para técnico
-    }
+    freeTecnicos(tecnicos);
     return 0;
 }
