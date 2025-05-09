@@ -91,3 +91,15 @@ int verifyTecnico(char *username, char *password, NODE *tecnicos) {
     }
     return 0;
 }
+
+NODE* getTecnico(char *username, char *password, NODE *tecnicos) {
+    while (tecnicos) {
+        // Verifica se o username e a password correspondem
+        if ((strcmp(tecnicos->tecnico.user, username) == 0) && 
+            (strcmp(tecnicos->tecnico.password, password) == 0)) {
+            return tecnicos; // Retorna o ponteiro para o nó encontrado
+        }
+        tecnicos = tecnicos->next; // Avança para o próximo nó
+    }
+    return NULL; // Retorna NULL se não encontrar o técnico
+}
