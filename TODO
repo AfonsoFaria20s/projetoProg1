@@ -16,3 +16,10 @@ Como Tecnico de Resposta, o programa deve permitir:
     Consultar o hist´orico dos seus incidentes resolvidos.
     Delegar incidente para outro t´ecnico (com motivo).
     Registar uso de ferramentas na an´alise (ex: antiv´ırus, scanner de rede, etc.).
+
+GESTAO DE DADOS
+    Utilizar ficheiros bin´arios para armazenar dados de incidentes, t´ecnicos e hist´oricos
+    de a¸c˜oes.
+    Utilizar ficheiros de texto para gerar relat´orios e logs de auditoria.
+    Utilizar listas ligadas para manipular os dados em mem´oria.
+    Aplicar algoritmos de ordena¸c˜ao e pesquisa para an´alise r´apida e eficaz dos registos.
