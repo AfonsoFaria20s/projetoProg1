@@ -26,8 +26,9 @@ int main() {
         printf("\nPassword: ");
         fgets(login.password, sizeof(login.password), stdin);
         login.password[strcspn(login.password, "\n")] = '\0';
+        // Login sucesso
         if(verifyTecnico(login.username,login.password,tecnicos)) {
-            printf("\nBem-Vindo %s!", login.username);
+            
         } else{
             printf("\nPalavra passe errada!");
         }

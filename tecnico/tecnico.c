@@ -31,6 +31,13 @@ NODE* initTecnicos() {
     return head;
 }
 
+void printMenuTecnico() {
+    printf("--< Menu >--");
+    printf("1 - ");
+    printf("2 - ");
+    printf("0 - Sair");
+}
+
 int isTecnicoRegistered(const char *username, NODE *tecnicos) {
     while (tecnicos) {
         if (strcmp(tecnicos->tecnico.user, username) == 0)
