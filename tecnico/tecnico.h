@@ -17,5 +17,6 @@ int registerTecnico(const char *username, const char *password, NODE** tecnicos)
 void saveTecnicosToFile(NODE *tecnicos);
 void freeTecnicos(NODE *head);
 int verifyTecnico(char *username, char *password, NODE *tecnicos);
+void printTecnicos(NODE *tecnicos);
 
 #endif

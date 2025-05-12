@@ -99,7 +99,17 @@ NODE* getTecnico(char *username, char *password, NODE *tecnicos) {
             (strcmp(tecnicos->tecnico.password, password) == 0)) {
             return tecnicos; // Retorna o ponteiro para o nó encontrado
         }
-        tecnicos = tecnicos->next; // Avança para o próximo nó
+        tecnicos = tecnicos->next; // Avança para o próximo node
     }
     return NULL; // Retorna NULL se não encontrar o técnico
+}
+
+void printTecnicos(NODE *tecnicos) {
+    printf("\n--< Tecnicos atualmente registados >--");
+    while(tecnicos) {
+        printf("\nUsername: %s", tecnicos->tecnico.user);
+        printf("\nPassword: %s", tecnicos->tecnico.password);
+        printf("\n");
+        tecnicos = tecnicos->next;
+    }
 }

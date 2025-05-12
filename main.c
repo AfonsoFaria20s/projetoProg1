@@ -40,12 +40,12 @@ int main() {
         resposta[strcspn(resposta, "\n")] = '\0';
 
         if (strcmp(resposta, "sim") == 0) {
-            printf("Password (min 5 caracteres): ");
+            printf("\nPassword (min 5 caracteres): ");
             fgets(login.password, sizeof(login.password), stdin);
             login.password[strcspn(login.password, "\n")] = '\0';
 
             while (strlen(login.password) < 5) {
-                printf("Password muito curta! Tente novamente: ");
+                printf("\nPassword muito curta! Tente novamente: ");
                 fgets(login.password, sizeof(login.password), stdin);
                 login.password[strcspn(login.password, "\n")] = '\0';
             }
