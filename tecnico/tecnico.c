@@ -31,11 +31,14 @@ NODE* initTecnicos() {
     return head;
 }
 
-void printMenuTecnico() {
-    printf("--< Menu >--");
-    printf("1 - ");
-    printf("2 - ");
-    printf("0 - Sair");
+void menuTecnico(int *opt) {
+    printf("\n--< Menu >--");
+    printf("\n1 - Visualizar incidentes atribuidos");
+    printf("\n2 - ");
+    printf("\n0 - Sair");
+    printf("\n\nOpcao: ");
+    scanf("%i", opt);
+    printf("------------");
 }
 
 int isTecnicoRegistered(const char *username, NODE *tecnicos) {
