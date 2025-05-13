@@ -9,7 +9,7 @@ Como Administrador de Seguranca, o programa deve permitir:
     Filtrar incidentes por intervalo de datas.
 
 Como Tecnico de Resposta, o programa deve permitir:
-    Indicar tempo estimado para resolu¸c˜ao ao aceitar um novo incidente.
+    Indicar tempo estimado para resolucao ao aceitar um novo incidente.
     Visualizar incidentes atribu´ıdos.
     Atualizar o estado de um incidente (ex: em an´alise, resolvido).
     Adicionar coment´arios e a¸c˜oes realizadas.

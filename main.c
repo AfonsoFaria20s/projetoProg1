@@ -23,12 +23,26 @@ int main() {
 
         // LOGICA TECNICO LOGIN
     } else if (isTecnicoRegistered(login.username, tecnicos)) {
-        printf("\nPassword: ");
+        printf("Password: ");
         fgets(login.password, sizeof(login.password), stdin);
         login.password[strcspn(login.password, "\n")] = '\0';
         // Login sucesso
         if(verifyTecnico(login.username,login.password,tecnicos)) {
-            
+            int opt = 1;
+            while(opt!=0) {
+                menuTecnico(&opt);
+                switch (opt) {
+                case 0: // Sair
+                    printf("\nA sair...");
+                    break;
+                case 1: // Visualisar incidentes atribuidos
+                    
+                    break;
+                default:
+                    printf("\nOpcao invalida! Tente novamente.");
+                    break;
+                }
+            }
         } else{
             printf("\nPalavra passe errada!");
         }
