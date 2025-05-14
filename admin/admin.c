@@ -3,30 +3,31 @@
 #include <string.h>
 
 #include "admin.h"
+#include "../tecnico/tecnico.h"
 
 // Funcao para inicializar a lista ligada a partir do ficheiro
-NODE* initAdmins() {
+NODE_ADMIN* initAdmins() {
     FILE *fp = fopen("dados\\tecnico_list.dat", "rb");
     if (fp == NULL) {
         printf("Erro ao abrir o ficheiro 'tecnico_list.dat'!\n");
         return NULL;
     }
 
-    NODE *head = NULL; // Cabeca da lista ligada
-    NODE *current = NULL;
+    NODE_ADMIN *head = NULL; // Cabeca da lista ligada
+    NODE_ADMIN *current = NULL;
 
     ADMIN temp;
     int count = 0; // Contador para admins carregados
 
     while (fread(&temp, sizeof(ADMIN), 1, fp)) {
         // Criar um novo node
-        NODE *newNode = (NODE *)malloc(sizeof(NODE));
+        NODE_ADMIN *newNode = (NODE_ADMIN *)malloc(sizeof(NODE_ADMIN));
         if (newNode == NULL) {
             printf("Erro ao alocar memória para um novo admin!\n");
             fclose(fp);
             // Libertar memoria ja alocada
             while (head != NULL) {
-                NODE *toFree = head;
+                NODE_ADMIN *toFree = head;
                 head = head->next;
                 free(toFree);
             }
@@ -56,4 +57,11 @@ NODE* initAdmins() {
     }
 
     return head;
+}
+
+
+int valida_tecnico (NODE* inicio, char username[]){
+
+    printTecnicos(inicio);
+
 }

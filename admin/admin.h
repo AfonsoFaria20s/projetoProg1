@@ -6,6 +6,6 @@ typedef struct {
 typedef struct node {
     ADMIN admin;
     struct node *next;
-} NODE;
+} NODE_ADMIN;
 
-NODE* initAdmins();
+NODE_ADMIN* initAdmins();
