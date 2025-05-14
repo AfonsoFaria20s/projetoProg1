@@ -56,6 +56,8 @@ int registerTecnico(const char *username, const char *password, NODE **tecnicos)
 
     strncpy(newNode->tecnico.user, username, sizeof(newNode->tecnico.user));
     strncpy(newNode->tecnico.password, password, sizeof(newNode->tecnico.password));
+    newNode->tecnico.isAtivo = 0;
+    
     newNode->next = NULL;
 
     if (!*tecnicos)

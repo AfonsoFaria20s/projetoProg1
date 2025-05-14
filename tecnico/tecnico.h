@@ -4,6 +4,7 @@
 typedef struct {
     char user[100];
     char password[50];
+    int isAtivo;
 } TECNICO;
 
 typedef struct node {

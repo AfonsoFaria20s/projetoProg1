@@ -16,3 +16,5 @@ typedef struct node_incidente {
     INCIDENTE incidente;
     struct node_incidente *next;
 } NODE_INCIDENTE;
+
+NODE_INCIDENTE *initIncidentes();
