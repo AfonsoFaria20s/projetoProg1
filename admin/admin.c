@@ -59,6 +59,45 @@ NODE_ADMIN* initAdmins() {
     return head;
 }
 
+void validarTecnico(NODE *tecnicos, const char *username) {
+    NODE *curr = tecnicos;
+    while (curr) {
+        if (strcmp(curr->tecnico.user, username) == 0) {
+            curr->tecnico.isAtivo = 1;
+            printf("Técnico %s validado!\n", username);
+            saveTecnicosToFile(tecnicos);
+            return;
+        }
+        curr = curr->next;
+    }
+    printf("Técnico %s não encontrado.\n", username);
+}
+
+void menuAdmin(NODE *tecnicos) {
+    int opt;
+    char username[100];
+    do {
+        printf("\n--- Menu Administrador ---\n");
+        printf("1 - Validar Técnico\n");
+        printf("0 - Sair\n");
+        printf("Opção: ");
+        scanf("%d", &opt);
+        getchar(); // Limpa o buffer do enter
+        switch(opt) {
+            case 1:
+                printf("Username do técnico a validar: ");
+                fgets(username, sizeof(username), stdin);
+                username[strcspn(username, "\n")] = '\0';
+                validarTecnico(tecnicos, username);
+                break;
+            case 0:
+                printf("A sair do menu admin...\n");
+                break;
+            default:
+                printf("Opção inválida!\n");
+        }
+    } while(opt != 0);
+}
 
 int valida_tecnico (NODE* inicio, char username[]){
 
