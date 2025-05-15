@@ -6,7 +6,7 @@
 typedef struct {
     char user[100];
     char password[50];
-    // outros campos se necessário
+   
 } ADMIN;
 
 typedef struct node_admin {
@@ -21,6 +21,13 @@ NODE_ADMIN* initAdmins();
 void validarTecnico(NODE *tecnicos, const char *username);
 
 // Menu do administrador
-void menuAdmin(NODE *tecnicos);
+void menuAdmin(NODE *tecnicos); // Nao sei se é incidente ou incidentes
+
+
+
+
+
+
+
 
 #endif

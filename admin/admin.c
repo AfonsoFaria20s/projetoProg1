@@ -4,6 +4,7 @@
 
 #include "admin.h"
 #include "../tecnico/tecnico.h"
+#include "../incidentes/incidentes.h"
 
 // Funcao para inicializar a lista ligada a partir do ficheiro
 NODE_ADMIN* initAdmins() {

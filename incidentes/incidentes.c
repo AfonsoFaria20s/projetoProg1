@@ -32,6 +32,7 @@ NODE_INCIDENTE* initIncidentes() {
             }
             return NULL;
         }
+        
 
         // Copiar os dados do incidente
         newNode->incidente = temp;
@@ -56,4 +57,39 @@ NODE_INCIDENTE* initIncidentes() {
     }
 
     return head;
+}
+
+
+void removerIncidente(NODE_INCIDENTE **incidentes, int id) {
+    NODE_INCIDENTE *curr = *incidentes, *prev = NULL;
+    while (curr) {
+        if (curr->incidente.id == id) {
+            if (prev) prev->next = curr->next;
+            else *incidentes = curr->next;
+            free(curr);
+            saveIncidentesToFile(*incidentes);
+            printf("Incidente %d removido.\n", id);
+            return;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
+    printf("Incidente %d não encontrado.\n", id);
+}
+
+void saveIncidentesToFile(NODE_INCIDENTE *incidentes) {
+    FILE *fp = fopen("dados\\incidentes.dat", "wb");
+    if (fp == NULL) {
+        printf("Erro ao abrir o ficheiro 'incidentes.dat' para escrita!\n");
+        return;
+    }
+
+    NODE_INCIDENTE *curr = incidentes;
+    while (curr) {
+        fwrite(&(curr->incidente), sizeof(INCIDENTE), 1, fp);
+        curr = curr->next;
+    }
+
+    fclose(fp);
+    printf("Incidentes guardados com sucesso.\n");
 }

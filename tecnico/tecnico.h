@@ -4,13 +4,13 @@
 typedef struct {
     char user[100];
     char password[50];
-    int isAtivo;
+    int isAtivo;    // 0 = não validado, 1 = validado
 } TECNICO;
 
 typedef struct node {
     TECNICO tecnico;
     struct node *next;
-} NODE;
+} NODE;  /// FALTA MUDAR O RESTO PARA NODE_TECNICO
 
 NODE* initTecnicos();
 int isTecnicoRegistered(const char *username, NODE* tecnicos);
