@@ -93,3 +93,27 @@ void saveIncidentesToFile(NODE_INCIDENTE *incidentes) {
     fclose(fp);
     printf("Incidentes guardados com sucesso.\n");
 }
+
+void printIncidentes(NODE_INCIDENTE *incidentes) {
+    while(incidentes) {
+        printf("Nome: %s", incidentes->incidente.nome);
+        printf("Tecnico atribuido: %s", incidentes->incidente.tecnico_atribuido);
+        printf("Estado: %s", incidentes->incidente.estado);
+
+        if(incidentes->incidente.estado==0) printf("Estado: Nao Resolvido");
+        else printf("Estado: Resolvido");
+
+        // Severidade: 1, 2, 3 -> baixa, media, alta
+        if(incidentes->incidente.severidade==1) printf("Severidade: Baixa");
+        if(incidentes->incidente.severidade==2) printf("Severidade: Media");
+        if(incidentes->incidente.severidade==3) printf("Severidade: Alta");
+
+        /* Tipo
+            1 - Phishing
+            2 - Malware
+            3 - Acesso nao autorizado
+            4 - Connection is down
+        */
+        if(incidentes->incidente.tipo==1) printf("Tipo: Phishing");
+    }
+}

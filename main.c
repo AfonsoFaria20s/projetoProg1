@@ -2,6 +2,7 @@
 #include <string.h>
 #include "tecnico/tecnico.h"
 #include "admin/admin.h"
+#include "incidentes/incidentes.h"
 
 typedef struct {
     char username[100];
@@ -15,6 +16,7 @@ void limparBuffer() {
 
 int main() {
     NODE *tecnicos = initTecnicos();
+    NODE_INCIDENTE *incidentes = initIncidentes();
     LOGIN login;
     char resposta[10];
     int sair = 0;
@@ -65,10 +67,10 @@ int main() {
                     menuTecnico(&opt);
                     switch (opt) {
                         case 0:
-                            printf("\nA sair...\n");
+                            printf("\nA sair...");
                             break;
                         case 1:
-                            printf("\n[Funcionalidade: Visualizar incidentes atribuídos]\n");
+                            printIncidentes(incidentes);
                             break;
                         default:
                             printf("\nOpcao invalida! Tente novamente.");

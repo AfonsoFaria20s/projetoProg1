@@ -5,6 +5,7 @@ typedef struct data_incidente {
 } DATA_INCIDENTE;
 
 typedef struct incidente {
+    char nome[100];
     char tecnico_atribuido[100];
     int estado;
     int severidade;
