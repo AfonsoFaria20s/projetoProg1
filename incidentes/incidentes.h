@@ -33,3 +33,5 @@ void listarIncidentesTipo(NODE_INCIDENTE *incidente, int tipo);
 
 //Salvar os incidentes para o ficheiro
 void saveIncidentesToFile(NODE_INCIDENTE *incidentes);
+
+void printIncidentes(NODE_INCIDENTE *incidentes);
