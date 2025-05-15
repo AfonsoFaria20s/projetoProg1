@@ -40,9 +40,9 @@ int main() {
             printf("\nBem-vindo, Admin!\n");
             while (opt != 0) {
                 menuAdmin(&opt);
+                limparBuffer();
                 switch (opt) {
                     case 1: // Validar tecnico
-                        limparBuffer();
                         printf("\nUsername do tecnico a validar: ");
                         getString(login.username, sizeof(login.username));
                         int res = validarTecnico(tecnicos, login.username);
@@ -54,34 +54,30 @@ int main() {
                             printf("\nErro ao validar tecnico!");
                         }
                         break;
-                    case 2:
-                        limparBuffer();
+                    case 2: // Adicionar incidente
                         printf("\nNome do incidente:\n-> ");
                         getString(auxIncidente.nome, sizeof(auxIncidente.nome));
-                        limparBuffer();
                         printf("\nTecnico responsavel:\n-> ");
                         getString(auxIncidente.tecnico_atribuido, sizeof(auxIncidente.tecnico_atribuido));
-                        limparBuffer();
                         printf("\nSeveridade:\n-> ");
                         scanf("%i", &auxIncidente.severidade);
-                        limparBuffer(); // <-- limpa o buffer antes de usar fgets a seguir
                         printf("\nTipo:\n-> ");
                         scanf("%i", &auxIncidente.tipo);
                         limparBuffer();
 
-                        auxIncidente.id = getLastId(incidentes)+1;
+                        auxIncidente.id = getLastId(incidentes) + 1;
 
                         time_t t = time(NULL);
                         struct tm tm = *localtime(&t);  
                         data_incidente.dia = tm.tm_mday;
-                        data_incidente.mes = tm.tm_mon;
-                        data_incidente.ano = tm.tm_year;
+                        data_incidente.mes = tm.tm_mon + 1;
+                        data_incidente.ano = tm.tm_year + 1900;
 
                         auxIncidente.data_criacao = data_incidente;
                         auxIncidente.estado = 0;
                         
-                        addIncidente(incidentes, auxIncidente);
-                        limparBuffer();
+                        addIncidente(&incidentes, auxIncidente);
+                        printf("\nIncidente adicionado com sucesso!\n");
                         break;
                     case 0:
                         printf("\nA sair do menu administrador...\n");

@@ -4,9 +4,11 @@
 
 #include "incidentes.h"
 
+#define INCIDENTES_PATH "dados/incidentes.dat"
+
 // Funcao para inicializar a lista ligada a partir do ficheiro
 NODE_INCIDENTE* initIncidentes() {
-    FILE *fp = fopen("dados\\incidentes.dat", "rb");
+    FILE *fp = fopen(INCIDENTES_PATH, "rb");
     if (fp == NULL) {
         printf("Erro ao abrir o ficheiro 'incidentes.dat'!\n");
         return NULL;
@@ -18,7 +20,7 @@ NODE_INCIDENTE* initIncidentes() {
     INCIDENTE temp;
     int count = 0; // Contador para incidentes carregados
 
-    while (fread(&temp, sizeof(NODE_INCIDENTE), 1, fp)) {
+    while (fread(&temp, sizeof(INCIDENTE), 1, fp)) {
         // Criar um novo node
         NODE_INCIDENTE *newNode = (NODE_INCIDENTE *)malloc(sizeof(NODE_INCIDENTE));
         if (newNode == NULL) {
@@ -32,7 +34,6 @@ NODE_INCIDENTE* initIncidentes() {
             }
             return NULL;
         }
-        
 
         // Copiar os dados do incidente
         newNode->incidente = temp;
@@ -49,12 +50,6 @@ NODE_INCIDENTE* initIncidentes() {
     }
 
     fclose(fp);
-
-    if (count == 0) {
-        printf("Nenhum admin foi encontrado no ficheiro.\n");
-    } else {
-        printf("%d admin(s) carregado(s) com sucesso.\n", count);
-    }
 
     return head;
 }
@@ -78,7 +73,7 @@ void removerIncidente(NODE_INCIDENTE **incidentes, int id) {
 }
 
 void saveIncidentesToFile(NODE_INCIDENTE *incidentes) {
-    FILE *fp = fopen("dados\\incidentes.dat", "wb");
+    FILE *fp = fopen("dados/incidentes.dat", "wb");
     if (fp == NULL) {
         printf("Erro ao abrir o ficheiro 'incidentes.dat' para escrita!\n");
         return;
@@ -124,28 +119,32 @@ void printIncidentes(NODE_INCIDENTE *incidentes) {
     }
 }
 
-int addIncidente(NODE_INCIDENTE *incidentes, INCIDENTE newIncidente) {
-    NODE_INCIDENTE *LAST = NULL;
-    LAST = incidentes;
-
-    // Iterar ate ao final
-    while (LAST != NULL) {
-        LAST = LAST->next;
-    }
+int addIncidente(NODE_INCIDENTE **incidentes, INCIDENTE newIncidente) {
+    NODE_INCIDENTE *novo = malloc(sizeof(NODE_INCIDENTE));
+    if (!novo) return -1;
     
-    LAST->incidente = newIncidente;
+    novo->incidente = newIncidente;
+    novo->next = NULL;
 
+    if (*incidentes == NULL) {
+        *incidentes = novo;
+    } else {
+        NODE_INCIDENTE *curr = *incidentes;
+        while (curr->next != NULL) {
+            curr = curr->next;
+        }
+        curr->next = novo;
+    }
+    saveIncidentesToFile(*incidentes); // Guarda logo após adicionar
     return 0;
 }
 
 int getLastId(NODE_INCIDENTE *incidentes) {
-    NODE_INCIDENTE *LAST = NULL;
-    LAST = incidentes;
+    if (incidentes == NULL) return 0; // Se a lista está vazia, começa no id 0
 
-    // Iterar ate ao final
-    while (LAST != NULL) {
-        LAST = LAST->next;
+    NODE_INCIDENTE *curr = incidentes;
+    while (curr->next != NULL) {
+        curr = curr->next;
     }
-    
-    return LAST->incidente.id;
+    return curr->incidente.id;
 }

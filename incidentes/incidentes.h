@@ -33,7 +33,7 @@ void listarIncidentesSeveridade(NODE_INCIDENTE *incidente, int severidade);
 void listarIncidentesTipo(NODE_INCIDENTE *incidente, int tipo);
 
 //Salvar os incidentes para o ficheiro
-int addIncidente(NODE_INCIDENTE *incidentes, INCIDENTE newIncidente);
+int addIncidente(NODE_INCIDENTE **incidentes, INCIDENTE newIncidente);
 void saveIncidentesToFile(NODE_INCIDENTE *incidentes);
 
 void printIncidentes(NODE_INCIDENTE *incidentes);

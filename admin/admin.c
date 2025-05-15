@@ -8,9 +8,9 @@
 
 // Funcao para inicializar a lista ligada a partir do ficheiro
 NODE_ADMIN* initAdmins() {
-    FILE *fp = fopen("dados\\tecnico_list.dat", "rb");
+    FILE *fp = fopen("dados/admin_list.dat", "rb");
     if (fp == NULL) {
-        printf("Erro ao abrir o ficheiro 'tecnico_list.dat'!\n");
+        printf("Erro ao abrir o ficheiro 'admin_list.dat'!\n");
         return NULL;
     }
 
