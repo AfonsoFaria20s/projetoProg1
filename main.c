@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "tecnico/tecnico.h"
+#include "admin/admin.h"
 
 typedef struct {
     char username[100];
@@ -19,7 +20,35 @@ int main() {
 
         // LOGICA ADMIN
     if (strcmp(login.username, "admin") == 0) {
+        int opt = 1;
         printf("\nBem-vindo, Admin!\n");
+        if(1) { // Condicao para verificar se e a primeira vez a fazer login
+            while(opt!=0) {
+                menuAdmin(&opt);
+                switch(opt) {
+                    case 1: // Validar tecnico
+                        getchar();
+                        printf("\nUsername do tecnico a validar: ");
+                        fgets(login.username, sizeof(login.username), stdin);
+                        login.username[strcspn(login.username, "\n")] = '\0';
+
+                        int res = validarTecnico(tecnicos, login.username);
+                        if(res==1) {
+                            printf("\nSucesso ao validar tecnico!");
+                        } else if(res==0) {
+                            printf("\nTecnico ja esta ativo!");
+                        } else if(res==-1) {
+                            printf("\nErro ao validar tecnico!");
+                        }
+                        break;
+                    case 0:
+                        printf("\nA sair do menu administrador...");
+                        break;
+                    default:
+                        printf("\nOpção inválida!");
+                }
+            }
+        }
 
         // LOGICA TECNICO LOGIN
     } else if (isTecnicoRegistered(login.username, tecnicos)) {

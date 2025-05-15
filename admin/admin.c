@@ -60,48 +60,30 @@ NODE_ADMIN* initAdmins() {
     return head;
 }
 
-void validarTecnico(NODE *tecnicos, const char *username) {
-    NODE *curr = tecnicos;
-    while (curr) {
-        if (strcmp(curr->tecnico.user, username) == 0) {
-            curr->tecnico.isAtivo = 1;
-            printf("Técnico %s validado!\n", username);
+int validarTecnico(NODE *tecnicos, const char *username) {
+    NODE *node = tecnicos;
+    while (node) {
+        if (strcmp(node->tecnico.user, username) == 0) {
+            // Verificar se ja esta ativo
+            if(node->tecnico.isAtivo==1) {
+                return 0;
+            }
+            node->tecnico.isAtivo = 1;
+            printf("Tecnico %s validado!\n", username);
             saveTecnicosToFile(tecnicos);
-            return;
+            return 1;
         }
-        curr = curr->next;
+        node = node->next;
     }
-    printf("Técnico %s não encontrado.\n", username);
+    return -1;
 }
 
-void menuAdmin(NODE *tecnicos) {
-    int opt;
+void menuAdmin(int *opt) {
     char username[100];
-    do {
-        printf("\n--- Menu Administrador ---\n");
-        printf("1 - Validar Técnico\n");
-        printf("0 - Sair\n");
-        printf("Opção: ");
-        scanf("%d", &opt);
-        getchar(); // Limpa o buffer do enter
-        switch(opt) {
-            case 1:
-                printf("Username do técnico a validar: ");
-                fgets(username, sizeof(username), stdin);
-                username[strcspn(username, "\n")] = '\0';
-                validarTecnico(tecnicos, username);
-                break;
-            case 0:
-                printf("A sair do menu admin...\n");
-                break;
-            default:
-                printf("Opção inválida!\n");
-        }
-    } while(opt != 0);
-}
-
-int valida_tecnico (NODE* inicio, char username[]){
-
-    printTecnicos(inicio);
-
+    printf("\n--- Menu Administrador ---\n");
+    printf("\n1 - Validar Tecnico\n");
+    printf("\n0 - Sair\n");
+    printf("\nOpcao: ");
+    scanf("%d", opt);
+    printf("\n------------------------");
 }

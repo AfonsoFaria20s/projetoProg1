@@ -3,6 +3,7 @@
 
 #include "../tecnico/tecnico.h"
 
+
 typedef struct {
     char user[100];
     char password[50];
@@ -18,10 +19,10 @@ typedef struct node_admin {
 NODE_ADMIN* initAdmins();
 
 // Valida técnico (ativa técnico registado)
-void validarTecnico(NODE *tecnicos, const char *username);
+int validarTecnico(NODE *tecnicos, const char *username);
 
 // Menu do administrador
-void menuAdmin(NODE *tecnicos); // Nao sei se é incidente ou incidentes
+void menuAdmin(int *opt); 
 
 
 
