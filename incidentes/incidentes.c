@@ -98,8 +98,8 @@ void printIncidentes(NODE_INCIDENTE *incidentes) {
     while(incidentes) {
         printf("Nome: %s", incidentes->incidente.nome);
         printf("Tecnico atribuido: %s", incidentes->incidente.tecnico_atribuido);
-        printf("Estado: %s", incidentes->incidente.estado);
 
+        //Estado
         if(incidentes->incidente.estado==0) printf("Estado: Nao Resolvido");
         else printf("Estado: Resolvido");
 
@@ -112,8 +112,40 @@ void printIncidentes(NODE_INCIDENTE *incidentes) {
             1 - Phishing
             2 - Malware
             3 - Acesso nao autorizado
-            4 - Connection is down
+            4 - Falha na conexao
         */
         if(incidentes->incidente.tipo==1) printf("Tipo: Phishing");
+        else if(incidentes->incidente.tipo==2) printf("Tipo: Malware");
+        else if(incidentes->incidente.tipo==3) printf("Tipo: Acesso nao autorizado");
+        else if(incidentes->incidente.tipo==4) printf("Tipo: Falha na conexao");
+
+        // Data
+        printf("Data: %i/%i/%i", incidentes->incidente.data_criacao.dia, incidentes->incidente.data_criacao.mes, incidentes->incidente.data_criacao.ano);
     }
+}
+
+int addIncidente(NODE_INCIDENTE *incidentes, INCIDENTE newIncidente) {
+    NODE_INCIDENTE *LAST = NULL;
+    LAST = incidentes;
+
+    // Iterar ate ao final
+    while (LAST != NULL) {
+        LAST = LAST->next;
+    }
+    
+    LAST->incidente = newIncidente;
+
+    return 0;
+}
+
+int getLastId(NODE_INCIDENTE *incidentes) {
+    NODE_INCIDENTE *LAST = NULL;
+    LAST = incidentes;
+
+    // Iterar ate ao final
+    while (LAST != NULL) {
+        LAST = LAST->next;
+    }
+    
+    return LAST->incidente.id;
 }

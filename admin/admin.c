@@ -80,9 +80,10 @@ int validarTecnico(NODE *tecnicos, const char *username) {
 
 void menuAdmin(int *opt) {
     char username[100];
-    printf("\n--- Menu Administrador ---\n");
-    printf("\n1 - Validar Tecnico\n");
-    printf("\n0 - Sair\n");
+    printf("\n--- Menu Administrador ---");
+    printf("\n1 - Validar Tecnico");
+    printf("\n2 - Adicionar incidente");
+    printf("\n0 - Sair");
     printf("\nOpcao: ");
     scanf("%d", opt);
     printf("\n------------------------");

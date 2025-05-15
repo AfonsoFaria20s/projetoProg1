@@ -3,6 +3,8 @@
 #include "tecnico/tecnico.h"
 #include "admin/admin.h"
 #include "incidentes/incidentes.h"
+#include "utils/utils.h"
+#include <time.h>
 
 typedef struct {
     char username[100];
@@ -17,9 +19,15 @@ void limparBuffer() {
 int main() {
     NODE *tecnicos = initTecnicos();
     NODE_INCIDENTE *incidentes = initIncidentes();
+
     LOGIN login;
+    INCIDENTE auxIncidente;
+    DATA_INCIDENTE data_incidente;
+
     char resposta[10];
     int sair = 0;
+
+    
 
     while (!sair) {
         printf("\n--< Area de Login >--\nUsername: ");
@@ -36,8 +44,7 @@ int main() {
                     case 1: // Validar tecnico
                         limparBuffer();
                         printf("\nUsername do tecnico a validar: ");
-                        fgets(login.username, sizeof(login.username), stdin);
-                        login.username[strcspn(login.username, "\n")] = '\0';
+                        getString(login.username, sizeof(login.username));
                         int res = validarTecnico(tecnicos, login.username);
                         if(res==1) {
                             printf("\nSucesso ao validar tecnico!");
@@ -46,6 +53,35 @@ int main() {
                         } else if(res==-1) {
                             printf("\nErro ao validar tecnico!");
                         }
+                        break;
+                    case 2:
+                        limparBuffer();
+                        printf("\nNome do incidente:\n-> ");
+                        getString(auxIncidente.nome, sizeof(auxIncidente.nome));
+                        limparBuffer();
+                        printf("\nTecnico responsavel:\n-> ");
+                        getString(auxIncidente.tecnico_atribuido, sizeof(auxIncidente.tecnico_atribuido));
+                        limparBuffer();
+                        printf("\nSeveridade:\n-> ");
+                        scanf("%i", &auxIncidente.severidade);
+                        limparBuffer(); // <-- limpa o buffer antes de usar fgets a seguir
+                        printf("\nTipo:\n-> ");
+                        scanf("%i", &auxIncidente.tipo);
+                        limparBuffer();
+
+                        auxIncidente.id = getLastId(incidentes)+1;
+
+                        time_t t = time(NULL);
+                        struct tm tm = *localtime(&t);  
+                        data_incidente.dia = tm.tm_mday;
+                        data_incidente.mes = tm.tm_mon;
+                        data_incidente.ano = tm.tm_year;
+
+                        auxIncidente.data_criacao = data_incidente;
+                        auxIncidente.estado = 0;
+                        
+                        addIncidente(incidentes, auxIncidente);
+                        limparBuffer();
                         break;
                     case 0:
                         printf("\nA sair do menu administrador...\n");
@@ -98,16 +134,15 @@ int main() {
                     login.password[strcspn(login.password, "\n")] = '\0';
                 }
 
-                if (registerTecnico(login.username, login.password, &tecnicos))
+                if (registerTecnico(login.username, login.password, &tecnicos)) {
                     printf("\nTecnico registado com sucesso!\n");
-                else
+                } else {
                     printf("\nErro ao registar tecnico.\n");
+                }
             } else {
                 printf("\nOperacao cancelada.\n");
             }
         }
-
-        limparBuffer();
         // Perguntar se quer terminar o programa ou voltar ao login
         printf("\nDeseja terminar o programa? (sim/nao): ");
         fgets(resposta, sizeof(resposta), stdin);

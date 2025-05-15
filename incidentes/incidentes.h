@@ -11,7 +11,7 @@ typedef struct incidente {
     int severidade;
     int tipo;
     int id;
-    DATA_INCIDENTE data;
+    DATA_INCIDENTE data_criacao;
 } INCIDENTE;
 
 typedef struct node_incidente {
@@ -33,6 +33,8 @@ void listarIncidentesSeveridade(NODE_INCIDENTE *incidente, int severidade);
 void listarIncidentesTipo(NODE_INCIDENTE *incidente, int tipo);
 
 //Salvar os incidentes para o ficheiro
+int addIncidente(NODE_INCIDENTE *incidentes, INCIDENTE newIncidente);
 void saveIncidentesToFile(NODE_INCIDENTE *incidentes);
 
 void printIncidentes(NODE_INCIDENTE *incidentes);
+int getLastId(NODE_INCIDENTE *incidentes);
