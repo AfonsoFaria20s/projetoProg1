@@ -6,85 +6,65 @@
 #include "../tecnico/tecnico.h"
 #include "../incidentes/incidentes.h"
 
-// Funcao para inicializar a lista ligada a partir do ficheiro
-NODE_ADMIN* initAdmins() {
+// Inicializa o admin (carrega do ficheiro ou cria default)
+ADMIN initAdmin() {
     FILE *fp = fopen("dados/admin_list.dat", "rb");
-    if (fp == NULL) {
-        printf("Erro ao abrir o ficheiro 'admin_list.dat'!\n");
-        return NULL;
-    }
+    ADMIN admin;
 
-    NODE_ADMIN *head = NULL; // Cabeca da lista ligada
-    NODE_ADMIN *current = NULL;
-
-    ADMIN temp;
-    int count = 0; // Contador para admins carregados
-
-    while (fread(&temp, sizeof(ADMIN), 1, fp)) {
-        // Criar um novo node
-        NODE_ADMIN *newNode = (NODE_ADMIN *)malloc(sizeof(NODE_ADMIN));
-        if (newNode == NULL) {
-            printf("Erro ao alocar memória para um novo admin!\n");
-            fclose(fp);
-            // Libertar memoria ja alocada
-            while (head != NULL) {
-                NODE_ADMIN *toFree = head;
-                head = head->next;
-                free(toFree);
-            }
-            return NULL;
-        }
-
-        // Copiar os dados do admin
-        newNode->admin = temp;
-        newNode->next = NULL;
-
-        // Adicionar o node a lista ligada
-        if (head == NULL) {
-            head = newNode;
-        } else {
-            current->next = newNode;
-        }
-        current = newNode;
-        count++;
-    }
-
-    fclose(fp);
-
-    if (count == 0) {
-        printf("Nenhum admin foi encontrado no ficheiro.\n");
+    if (fp != NULL) {
+        fread(&admin, sizeof(ADMIN), 1, fp);
+        fclose(fp);
     } else {
-        printf("%d admin(s) carregado(s) com sucesso.\n", count);
+        // Se não existir, cria admin default
+        strcpy(admin.user, "admin");
+        strcpy(admin.password, "admin");
+        admin.firstTime = 1;
+        saveAdminToFile(&admin);
     }
-
-    return head;
+    return admin;
 }
 
-int validarTecnico(NODE *tecnicos, const char *username) {
-    NODE *node = tecnicos;
+// Valida um técnico pelo username
+int validarTecnico(NODE_TECNICOS *tecnicos, const char *username) {
+    NODE_TECNICOS *node = tecnicos;
     while (node) {
         if (strcmp(node->tecnico.user, username) == 0) {
-            // Verificar se ja esta ativo
-            if(node->tecnico.isAtivo==1) {
-                return 0;
+            if(node->tecnico.isAtivo == 1) {
+                return 0; // Já está ativo
             }
             node->tecnico.isAtivo = 1;
             printf("Tecnico %s validado!\n", username);
             saveTecnicosToFile(tecnicos);
-            return 1;
+            return 1; // Validado com sucesso
         }
         node = node->next;
     }
-    return -1;
+    return -1; // Não encontrado
 }
 
+// Guarda o admin no ficheiro
+int saveAdminToFile(ADMIN *admin) {
+    FILE *fp = fopen("dados/admin_list.dat", "wb");
+    if (fp == NULL) {
+        printf("\nErro ao abrir o ficheiro 'admin_list.dat'!\n");
+        return -1;
+    }
+    fwrite(admin, sizeof(ADMIN), 1, fp); // <-- CORRIGIDO
+    fclose(fp);
+    printf("\nAdmin salvo.");
+    return 0;
+}
+
+// Menu do administrador
 void menuAdmin(int *opt) {
-    char username[100];
     printf("\n--- Menu Administrador ---");
     printf("\n1 - Validar Tecnico");
     printf("\n2 - Adicionar incidente");
+    printf("\n3 - Listar incidentes");
+    printf("\n4 - Remover incidente");
     printf("\n0 - Sair");
     printf("\nOpcao: ");
     scanf("%d", opt);
+    while (getchar() != '\n'); // Limpa o buffer
     printf("\n------------------------");
 }

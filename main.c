@@ -17,27 +17,36 @@ void limparBuffer() {
 }
 
 int main() {
-    NODE *tecnicos = initTecnicos();
+    ADMIN admin = initAdmin();
+    NODE_TECNICOS *tecnicos = initTecnicos();
     NODE_INCIDENTE *incidentes = initIncidentes();
 
     LOGIN login;
-    INCIDENTE auxIncidente;
+    INCIDENTE auxIncidente; int id;
     DATA_INCIDENTE data_incidente;
 
     char resposta[10];
     int sair = 0;
-
-    
 
     while (!sair) {
         printf("\n--< Area de Login >--\nUsername: ");
         fgets(login.username, sizeof(login.username), stdin);
         login.username[strcspn(login.username, "\n")] = '\0';
 
+        printf("%i", admin.firstTime);
         // ADMIN
         if (strcmp(login.username, "admin") == 0) {
             int opt = 1;
-            printf("\nBem-vindo, Admin!\n");
+            char newPassword[100];
+            if(admin.firstTime == 1) {
+                printf("aaa");
+                limparBuffer();
+                printf("Parece que e a sua primeira vez a fazer login,\nnesse caso, aconcelhamos a trocar a password.\nInsira uma nova password\n-> ");
+                getString(newPassword, sizeof(newPassword));
+                strcpy(admin.password, newPassword);
+                admin.firstTime = 0;
+                saveAdminToFile(&admin);
+            }
             while (opt != 0) {
                 menuAdmin(&opt);
                 limparBuffer();
@@ -78,6 +87,14 @@ int main() {
                         
                         addIncidente(&incidentes, auxIncidente);
                         printf("\nIncidente adicionado com sucesso!\n");
+                        break;
+                    case 3: // Listar incidentes
+                        printIncidentes(incidentes);
+                        break;
+                    case 4: // Remover incidentes
+                        printf("\nId do incidente a remover: ");
+                        scanf("%i", &id);
+                        removerIncidente(&incidentes, id);
                         break;
                     case 0:
                         printf("\nA sair do menu administrador...\n");

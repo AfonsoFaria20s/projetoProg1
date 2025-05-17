@@ -5,15 +5,15 @@
 
 #define FILE_PATH "dados/tecnico_list.dat"
 
-NODE* initTecnicos() {
+NODE_TECNICOS* initTecnicos() {
     FILE *fp = fopen(FILE_PATH, "rb");
     if (!fp) return NULL;
 
-    NODE *head = NULL, *tail = NULL;
+    NODE_TECNICOS *head = NULL, *tail = NULL;
     TECNICO temp;
 
     while (fread(&temp, sizeof(TECNICO), 1, fp)) {
-        NODE *newNode = malloc(sizeof(NODE));
+        NODE_TECNICOS *newNode = malloc(sizeof(NODE_TECNICOS));
         if (!newNode) break;
 
         newNode->tecnico = temp;
@@ -41,7 +41,7 @@ void menuTecnico(int *opt) {
     printf("------------");
 }
 
-int isTecnicoRegistered(const char *username, NODE *tecnicos) {
+int isTecnicoRegistered(const char *username, NODE_TECNICOS *tecnicos) {
     while (tecnicos) {
         if (strcmp(tecnicos->tecnico.user, username) == 0)
             return 1;
@@ -50,8 +50,8 @@ int isTecnicoRegistered(const char *username, NODE *tecnicos) {
     return 0;
 }
 
-int registerTecnico(const char *username, const char *password, NODE **tecnicos) {
-    NODE *newNode = malloc(sizeof(NODE));
+int registerTecnico(const char *username, const char *password, NODE_TECNICOS **tecnicos) {
+    NODE_TECNICOS *newNode = malloc(sizeof(NODE_TECNICOS));
     if (!newNode) return 0;
 
     strncpy(newNode->tecnico.user, username, sizeof(newNode->tecnico.user));
@@ -63,7 +63,7 @@ int registerTecnico(const char *username, const char *password, NODE **tecnicos)
     if (!*tecnicos)
         *tecnicos = newNode;
     else {
-        NODE *temp = *tecnicos;
+        NODE_TECNICOS *temp = *tecnicos;
         while (temp->next) temp = temp->next;
         temp->next = newNode;
     }
@@ -72,7 +72,7 @@ int registerTecnico(const char *username, const char *password, NODE **tecnicos)
     return 1;
 }
 
-void saveTecnicosToFile(NODE *tecnicos) {
+void saveTecnicosToFile(NODE_TECNICOS *tecnicos) {
     FILE *fp = fopen(FILE_PATH, "wb");
     if (!fp) return;
 
@@ -84,15 +84,15 @@ void saveTecnicosToFile(NODE *tecnicos) {
     fclose(fp);
 }
 
-void freeTecnicos(NODE *head) {
+void freeTecnicos(NODE_TECNICOS *head) {
     while (head) {
-        NODE *temp = head;
+        NODE_TECNICOS *temp = head;
         head = head->next;
         free(temp);
     }
 }
 
-int verifyTecnico(char *username, char *password, NODE *tecnicos) {
+int verifyTecnico(char *username, char *password, NODE_TECNICOS *tecnicos) {
     while (tecnicos) {
         if (strcmp(tecnicos->tecnico.user, username) == 0) {
             if(strcmp(tecnicos->tecnico.password, password)==0) {
@@ -104,7 +104,7 @@ int verifyTecnico(char *username, char *password, NODE *tecnicos) {
     return 0;
 }
 
-NODE* getTecnico(char *username, char *password, NODE *tecnicos) {
+NODE_TECNICOS* getTecnico(char *username, char *password, NODE_TECNICOS *tecnicos) {
     while (tecnicos) {
         // Verifica se o username e a password correspondem
         if ((strcmp(tecnicos->tecnico.user, username) == 0) && 
@@ -116,7 +116,7 @@ NODE* getTecnico(char *username, char *password, NODE *tecnicos) {
     return NULL; // Retorna NULL se não encontrar o técnico
 }
 
-void printTecnicos(NODE *tecnicos) {
+void printTecnicos(NODE_TECNICOS *tecnicos) {
     printf("\n--< Tecnicos atualmente registados >--");
     while(tecnicos) {
         printf("\nUsername: %s", tecnicos->tecnico.user);

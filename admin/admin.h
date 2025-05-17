@@ -1,34 +1,24 @@
 #ifndef ADMIN_H
 #define ADMIN_H
 
-#include "../tecnico/tecnico.h"
-
-
 typedef struct {
     char user[100];
-    char password[50];
-   
+    char password[100];
+    int firstTime;
 } ADMIN;
 
-typedef struct node_admin {
-    ADMIN admin;
-    struct node_admin *next;
-} NODE_ADMIN;
+#include "../tecnico/tecnico.h"
 
-// Inicializa lista de admins
-NODE_ADMIN* initAdmins();
+// Inicializa o admin (carrega do ficheiro ou cria default)
+ADMIN initAdmin();
 
-// Valida técnico (ativa técnico registado)
-int validarTecnico(NODE *tecnicos, const char *username);
+// Guarda o admin no ficheiro
+int saveAdminToFile(ADMIN *admin);
+
+// Valida um técnico pelo username
+int validarTecnico(NODE_TECNICOS *tecnicos, const char *username);
 
 // Menu do administrador
-void menuAdmin(int *opt); 
-
-
-
-
-
-
-
+void menuAdmin(int *opt);
 
 #endif

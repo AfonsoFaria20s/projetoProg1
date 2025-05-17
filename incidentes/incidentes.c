@@ -4,13 +4,13 @@
 
 #include "incidentes.h"
 
-#define INCIDENTES_PATH "dados/incidentes.dat"
+#define INCIDENTES_PATH "dados/incidentes_list.dat"
 
 // Funcao para inicializar a lista ligada a partir do ficheiro
 NODE_INCIDENTE* initIncidentes() {
     FILE *fp = fopen(INCIDENTES_PATH, "rb");
     if (fp == NULL) {
-        printf("Erro ao abrir o ficheiro 'incidentes.dat'!\n");
+        printf("Erro ao abrir o ficheiro 'incidentes_list.dat'!\n");
         return NULL;
     }
 
@@ -54,22 +54,21 @@ NODE_INCIDENTE* initIncidentes() {
     return head;
 }
 
-
 void removerIncidente(NODE_INCIDENTE **incidentes, int id) {
-    NODE_INCIDENTE *curr = *incidentes, *prev = NULL;
-    while (curr) {
-        if (curr->incidente.id == id) {
-            if (prev) prev->next = curr->next;
-            else *incidentes = curr->next;
-            free(curr);
+    NODE_INCIDENTE *incidente = *incidentes, *prev = NULL;
+    while (incidente) {
+        if (incidente->incidente.id == id) {
+            if (prev) prev->next = incidente->next;
+            else *incidentes = incidente->next;
+            free(incidente);
             saveIncidentesToFile(*incidentes);
             printf("Incidente %d removido.\n", id);
             return;
         }
-        prev = curr;
-        curr = curr->next;
+        prev = incidente;
+        incidente = incidente->next;
     }
-    printf("Incidente %d não encontrado.\n", id);
+    printf("Incidente com id %d nao encontrado.\n", id);
 }
 
 void saveIncidentesToFile(NODE_INCIDENTE *incidentes) {
@@ -79,29 +78,30 @@ void saveIncidentesToFile(NODE_INCIDENTE *incidentes) {
         return;
     }
 
-    NODE_INCIDENTE *curr = incidentes;
-    while (curr) {
-        fwrite(&(curr->incidente), sizeof(INCIDENTE), 1, fp);
-        curr = curr->next;
+    NODE_INCIDENTE *incidente = incidentes;
+    while (incidente) {
+        fwrite(&(incidente->incidente), sizeof(INCIDENTE), 1, fp);
+        incidente = incidente->next;
     }
 
     fclose(fp);
-    printf("Incidentes guardados com sucesso.\n");
+    printf("\nIncidentes guardados com sucesso.");
 }
 
 void printIncidentes(NODE_INCIDENTE *incidentes) {
     while(incidentes) {
-        printf("Nome: %s", incidentes->incidente.nome);
-        printf("Tecnico atribuido: %s", incidentes->incidente.tecnico_atribuido);
+        printf("\nId: %i", incidentes->incidente.id);
+        printf("\nNome: %s", incidentes->incidente.nome);
+        printf("\nTecnico atribuido: %s", incidentes->incidente.tecnico_atribuido);
 
         //Estado
-        if(incidentes->incidente.estado==0) printf("Estado: Nao Resolvido");
-        else printf("Estado: Resolvido");
+        if(incidentes->incidente.estado==0) printf("\nEstado: Nao Resolvido");
+        else printf("\nEstado: Resolvido");
 
         // Severidade: 1, 2, 3 -> baixa, media, alta
-        if(incidentes->incidente.severidade==1) printf("Severidade: Baixa");
-        if(incidentes->incidente.severidade==2) printf("Severidade: Media");
-        if(incidentes->incidente.severidade==3) printf("Severidade: Alta");
+        if(incidentes->incidente.severidade==1) printf("\nSeveridade: Baixa");
+        if(incidentes->incidente.severidade==2) printf("\nSeveridade: Media");
+        if(incidentes->incidente.severidade==3) printf("\nSeveridade: Alta");
 
         /* Tipo
             1 - Phishing
@@ -109,13 +109,15 @@ void printIncidentes(NODE_INCIDENTE *incidentes) {
             3 - Acesso nao autorizado
             4 - Falha na conexao
         */
-        if(incidentes->incidente.tipo==1) printf("Tipo: Phishing");
-        else if(incidentes->incidente.tipo==2) printf("Tipo: Malware");
-        else if(incidentes->incidente.tipo==3) printf("Tipo: Acesso nao autorizado");
-        else if(incidentes->incidente.tipo==4) printf("Tipo: Falha na conexao");
+        if(incidentes->incidente.tipo==1) printf("\nTipo: Phishing");
+        else if(incidentes->incidente.tipo==2) printf("\nTipo: Malware");
+        else if(incidentes->incidente.tipo==3) printf("\nTipo: Acesso nao autorizado");
+        else if(incidentes->incidente.tipo==4) printf("\nTipo: Falha na conexao");
 
         // Data
-        printf("Data: %i/%i/%i", incidentes->incidente.data_criacao.dia, incidentes->incidente.data_criacao.mes, incidentes->incidente.data_criacao.ano);
+        printf("\nData: %i/%i/%i", incidentes->incidente.data_criacao.dia, incidentes->incidente.data_criacao.mes, incidentes->incidente.data_criacao.ano);
+        printf("\n");
+        incidentes = incidentes->next;
     }
 }
 
