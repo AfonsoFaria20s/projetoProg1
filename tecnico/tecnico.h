@@ -1,24 +1,24 @@
 #ifndef TECNICO_H
 #define TECNICO_H
 
-typedef struct {
+typedef struct tecnico {
     char user[100];
     char password[50];
-    int isAtivo;    // 0 = não validado, 1 = validado
+    int isAtivo;
 } TECNICO;
 
-typedef struct node {
+typedef struct node_tecnico {
     TECNICO tecnico;
-    struct node *next;
-} NODE_TECNICOS;  /// FALTA MUDAR O RESTO PARA NODE_TECNICO
+    struct node_tecnico *next;
+} NODE_TECNICOS;
 
 NODE_TECNICOS* initTecnicos();
-int isTecnicoRegistered(const char *username, NODE_TECNICOS* tecnicos);
-int registerTecnico(const char *username, const char *password, NODE_TECNICOS** tecnicos);
-void saveTecnicosToFile(NODE_TECNICOS *tecnicos);
+int saveTecnicosToFile(NODE_TECNICOS *tecnicos);
+int tecnicoExists(const char *username, NODE_TECNICOS *tecnicos);
+int registerTecnico(const char *username, const char *password, NODE_TECNICOS **tecnicos);
+int validTecnicoLogin(char *username, char *password, NODE_TECNICOS *tecnicos);
 void freeTecnicos(NODE_TECNICOS *head);
-int verifyTecnico(char *username, char *password, NODE_TECNICOS *tecnicos);
-void printTecnicos(NODE_TECNICOS *tecnicos);
 void menuTecnico(int *opt);
+int ativarTecnico(NODE_TECNICOS *tecnicos, char username[]);
 
 #endif

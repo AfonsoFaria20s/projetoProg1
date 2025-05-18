@@ -1,3 +1,6 @@
+#ifndef INCIDENTES_H
+#define INCIDENTES_H
+
 typedef struct data_incidente {
     int dia;
     int mes;
@@ -7,11 +10,17 @@ typedef struct data_incidente {
 typedef struct incidente {
     char nome[100];
     char tecnico_atribuido[100];
-    int estado;
-    int severidade;
-    int tipo;
+    int estado; // 0=novo, 1=em analise, 2= resolvido
+    int severidade; // 1=baixa, 2=media, 3=alta
+    int tipo; // 1=Phishing, 2=Malware, 3=Acesso nao autorizado, 4=Falha conexao
     int id;
     DATA_INCIDENTE data_criacao;
+    DATA_INCIDENTE data_resolucao;
+    int tempo_estimado; // em dias
+    char historico[10][200]; // comentários/ações
+    int historico_count;
+    char ferramentas[10][50];
+    int ferramentas_count;
 } INCIDENTE;
 
 typedef struct node_incidente {
@@ -20,21 +29,30 @@ typedef struct node_incidente {
 } NODE_INCIDENTE;
 
 NODE_INCIDENTE *initIncidentes();
-
-//Adicionar um novo incidente
-void adicionarIncidente(NODE_INCIDENTE **incidentes, INCIDENTE novo);
-
-//Remover um incidente pelo ID
-void removerIncidente(NODE_INCIDENTE **incidentes, int id);
-
-//Consultar os Incidentes
-void listarIncidentesEstado(NODE_INCIDENTE *incidente, int estado);
-void listarIncidentesSeveridade(NODE_INCIDENTE *incidente, int severidade);
-void listarIncidentesTipo(NODE_INCIDENTE *incidente, int tipo);
-
-//Salvar os incidentes para o ficheiro
 int addIncidente(NODE_INCIDENTE **incidentes, INCIDENTE newIncidente);
+void removerIncidente(NODE_INCIDENTE **incidentes, int id);
 void saveIncidentesToFile(NODE_INCIDENTE *incidentes);
 
-void printIncidentes(NODE_INCIDENTE *incidentes);
+void printIncidentes(NODE_INCIDENTE *incidentes, char username[], int tecnicoSpecific);
+void printIncidentesPorEstado(NODE_INCIDENTE *inc, int estado);
+void printIncidentesPorSeveridade(NODE_INCIDENTE *inc, int severidade);
+void printIncidentesPorTipo(NODE_INCIDENTE *inc, int tipo);
+void printIncidentesPorIntervalo(NODE_INCIDENTE *inc, DATA_INCIDENTE inicio, DATA_INCIDENTE fim);
+
+NODE_INCIDENTE* ordenarPorSeveridade(NODE_INCIDENTE *head);
+NODE_INCIDENTE* ordenarPorData(NODE_INCIDENTE *head);
+NODE_INCIDENTE* ordenarPorTecnico(NODE_INCIDENTE *head);
+
+void gerarRelatorioMensal(NODE_INCIDENTE *inc, int mes, int ano, const char *ficheiro);
+void tempoMedioResolucaoPorTecnico(NODE_INCIDENTE *inc, char *tecnico);
+
+void adicionarComentario(NODE_INCIDENTE *incidentes, int id, const char *comentario);
+void adicionarFerramenta(NODE_INCIDENTE *incidentes, int id, const char *ferramenta);
+void delegarIncidente(NODE_INCIDENTE *incidentes, int id, const char *novo_tecnico, const char *motivo);
+void atualizarEstadoIncidente(NODE_INCIDENTE *incidentes, int id, int novo_estado, DATA_INCIDENTE data_resolucao);
+
 int getLastId(NODE_INCIDENTE *incidentes);
+
+int calculaDias(DATA_INCIDENTE inicio, DATA_INCIDENTE fim);
+
+#endif

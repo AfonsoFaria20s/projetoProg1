@@ -1,9 +1,9 @@
-#include <stdio.h>
-#include <string.h>
+#include "incidentes/incidentes.h"
 #include "tecnico/tecnico.h"
 #include "admin/admin.h"
-#include "incidentes/incidentes.h"
 #include "utils/utils.h"
+#include <stdio.h>
+#include <string.h>
 #include <time.h>
 
 typedef struct {
@@ -17,7 +17,7 @@ void limparBuffer() {
 }
 
 int main() {
-    ADMIN admin = initAdmin();
+    ADMIN *admins = initAdmins();
     NODE_TECNICOS *tecnicos = initTecnicos();
     NODE_INCIDENTE *incidentes = initIncidentes();
 
@@ -33,28 +33,23 @@ int main() {
         fgets(login.username, sizeof(login.username), stdin);
         login.username[strcspn(login.username, "\n")] = '\0';
 
-        printf("%i", admin.firstTime);
         // ADMIN
-        if (strcmp(login.username, "admin") == 0) {
+        ADMIN *admin = findAdmin(admins, login.username);
+        if (admin) {
             int opt = 1;
-            char newPassword[100];
-            if(admin.firstTime == 1) {
-                printf("aaa");
-                limparBuffer();
-                printf("Parece que e a sua primeira vez a fazer login,\nnesse caso, aconcelhamos a trocar a password.\nInsira uma nova password\n-> ");
-                getString(newPassword, sizeof(newPassword));
-                strcpy(admin.password, newPassword);
-                admin.firstTime = 0;
-                saveAdminToFile(&admin);
+            if (admin->firstTime == 1) {
+                printf("Primeiro login, altere a password: ");
+                getString(login.password, sizeof(login.password));
+                updateAdminPassword(admins, login.username, login.password);
+                printf("Password alterada!\n");
             }
             while (opt != 0) {
                 menuAdmin(&opt);
-                limparBuffer();
                 switch (opt) {
                     case 1: // Validar tecnico
                         printf("\nUsername do tecnico a validar: ");
                         getString(login.username, sizeof(login.username));
-                        int res = validarTecnico(tecnicos, login.username);
+                        int res = ativarTecnico(tecnicos, login.username);
                         if(res==1) {
                             printf("\nSucesso ao validar tecnico!");
                         } else if(res==0) {
@@ -89,12 +84,52 @@ int main() {
                         printf("\nIncidente adicionado com sucesso!\n");
                         break;
                     case 3: // Listar incidentes
-                        printIncidentes(incidentes);
+                        printIncidentes(incidentes, login.username, 0);
                         break;
                     case 4: // Remover incidentes
                         printf("\nId do incidente a remover: ");
                         scanf("%i", &id);
                         removerIncidente(&incidentes, id);
+                        limparBuffer();
+                        break;
+                    case 5: // Listar por estado
+                        printf("Estado (0=novo, 1=em analise, 2= resolvido): ");
+                        int estado; scanf("%d", &estado); limparBuffer();
+                        printIncidentesPorEstado(incidentes, estado);
+                        break;
+                    case 6: // Listar por severidade
+                        printf("Severidade (1=baixa, 2=media, 3=alta): ");
+                        int sev; scanf("%d", &sev); limparBuffer();
+                        printIncidentesPorSeveridade(incidentes, sev);
+                        break;
+                    case 7: // Listar por tipo
+                        printf("Tipo (1=Phishing, 2=Malware, 3=Acesso nao autorizado, 4=Falha conexao): ");
+                        int tipo; scanf("%d", &tipo); limparBuffer();
+                        printIncidentesPorTipo(incidentes, tipo);
+                        break;
+                    case 8: // Ordenar por severidade
+                        incidentes = ordenarPorSeveridade(incidentes);
+                        printf("Incidentes ordenados por severidade.\n");
+                        break;
+                    case 9: // Gerar relatório mensal
+                        printf("Mes: "); int mes; scanf("%d", &mes);
+                        printf("Ano: "); int ano; scanf("%d", &ano); limparBuffer();
+                        gerarRelatorioMensal(incidentes, mes, ano, "relatorio.txt");
+                        break;
+                    case 10: // Tempo médio de resolução por técnico
+                        printf("Username do tecnico: ");
+                        char tecnico[100]; getString(tecnico, sizeof(tecnico));
+                        tempoMedioResolucaoPorTecnico(incidentes, tecnico);
+                        break;
+                    case 11: // Filtrar por intervalo de datas
+                        {
+                            DATA_INCIDENTE inicio, fim;
+                        printf("Data inicio (dd mm aaaa): ");
+                        scanf("%d %d %d", &inicio.dia, &inicio.mes, &inicio.ano);
+                        printf("Data fim (dd mm aaaa): ");
+                        scanf("%d %d %d", &fim.dia, &fim.mes, &fim.ano); limparBuffer();
+                        printIncidentesPorIntervalo(incidentes, inicio, fim);
+                        }
                         break;
                     case 0:
                         printf("\nA sair do menu administrador...\n");
@@ -105,25 +140,75 @@ int main() {
             }
         }
         // TECNICO REGISTADO
-        else if (isTecnicoRegistered(login.username, tecnicos)) {
+        else if (tecnicoExists(login.username, tecnicos)) {
             printf("Password: ");
             fgets(login.password, sizeof(login.password), stdin);
             login.password[strcspn(login.password, "\n")] = '\0';
-            if (verifyTecnico(login.username, login.password, tecnicos)) {
+            if (validTecnicoLogin(login.username, login.password, tecnicos)) {
                 int opt = 1;
                 printf("\nBem-vindo, %s!\n", login.username);
                 while (opt != 0) {
                     menuTecnico(&opt);
                     switch (opt) {
-                        case 0:
-                            printf("\nA sair...");
+                        case 1: // Visualizar incidentes atribuídos
+                            printIncidentes(incidentes, login.username, 1);
                             break;
-                        case 1:
-                            printIncidentes(incidentes);
+                        case 2: // Atualizar estado de incidente
+                            printf("Id do incidente: ");
+                            int id; scanf("%d", &id); limparBuffer();
+                            printf("Novo estado (0=novo, 1=em analise, 2= resolvido): ");
+                            int novo_estado; scanf("%d", &novo_estado); limparBuffer();
+                            DATA_INCIDENTE data_resolucao = {0,0,0};
+                            if (novo_estado == 2) {
+                                time_t t = time(NULL);
+                                struct tm tm = *localtime(&t);
+                                data_resolucao.dia = tm.tm_mday;
+                                data_resolucao.mes = tm.tm_mon + 1;
+                                data_resolucao.ano = tm.tm_year + 1900;
+                            }
+                            atualizarEstadoIncidente(incidentes, id, novo_estado, data_resolucao);
+                            break;
+                        case 3: // Adicionar comentário/ação
+                            printf("Id do incidente: ");
+                            scanf("%d", &id); limparBuffer();
+                            printf("Comentario/acao: ");
+                            char comentario[200]; getString(comentario, sizeof(comentario));
+                            adicionarComentario(incidentes, id, comentario);
+                            break;
+                        case 4: // Delegar incidente
+                            printf("Id do incidente: ");
+                            scanf("%d", &id); limparBuffer();
+                            printf("Novo tecnico: ");
+                            char novo_tecnico[100]; getString(novo_tecnico, sizeof(novo_tecnico));
+                            printf("Motivo: ");
+                            char motivo[200]; getString(motivo, sizeof(motivo));
+                            delegarIncidente(incidentes, id, novo_tecnico, motivo);
+                            break;
+                        case 5: // Registar ferramenta usada
+                            printf("Id do incidente: ");
+                            scanf("%d", &id); limparBuffer();
+                            printf("Ferramenta: ");
+                            char ferramenta[50]; getString(ferramenta, sizeof(ferramenta));
+                            adicionarFerramenta(incidentes, id, ferramenta);
+                            break;
+                        case 6: // Consultar histórico dos seus incidentes resolvidos
+                            {
+                                NODE_INCIDENTE *tmp = incidentes;
+                                while (tmp) {
+                                    if (strcmp(tmp->incidente.tecnico_atribuido, login.username) == 0 && tmp->incidente.estado == 2) {
+                                        printIncidentes(tmp, login.username, 1);
+                                        for (int i = 0; i < tmp->incidente.historico_count; i++)
+                                            printf(" - %s\n", tmp->incidente.historico[i]);
+                                    }
+                                    tmp = tmp->next;
+                                }
+                            }
+                            break;
+                        case 0:
+                            printf("A sair do menu tecnico...\n");
                             break;
                         default:
-                            printf("\nOpcao invalida! Tente novamente.");
-                            break;
+                            printf("Opção inválida!\n");
                     }
                 }
             } else {
@@ -166,5 +251,6 @@ int main() {
     }
 
     freeTecnicos(tecnicos);
+    freeAdmins(admins);
     return 0;
 }
