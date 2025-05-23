@@ -99,23 +99,23 @@ int main() {
                         printIncidentes(incidentes, login.username, 0);
                         break;
                     case 5: // Remover incidentes
-                        printf("\nId do incidente a remover: ");
+                        printf("\nId do incidente a remover:\n ");
                         scanf("%i", &id);
                         removerIncidente(&incidentes, id);
                         limparBuffer();
                         break;
                     case 6: // Listar por estado
-                        printf("Estado (0=novo, 1=em analise, 2= resolvido): ");
+                        printf("Estado (0=novo, 1=em analise, 2= resolvido):\n");
                         int estado; scanf("%d", &estado); limparBuffer();
                         printIncidentesPorEstado(incidentes, estado);
                         break;
                     case 7: // Listar por severidade
-                        printf("Severidade (1=baixa, 2=media, 3=alta): ");
+                        printf("Severidade (1=baixa, 2=media, 3=alta):\n");
                         int sev; scanf("%d", &sev); limparBuffer();
                         printIncidentesPorSeveridade(incidentes, sev);
                         break;
                     case 8: // Listar por tipo
-                        printf("Tipo (1=Phishing, 2=Malware, 3=Acesso nao autorizado, 4=Falha conexao): ");
+                        printf("Tipo (1=Phishing, 2=Malware, 3=Acesso nao autorizado, 4=Falha conexao):\n");
                         int tipo; scanf("%d", &tipo); limparBuffer();
                         printIncidentesPorTipo(incidentes, tipo);
                         break;
@@ -174,9 +174,9 @@ int main() {
                             printIncidentes(incidentes, login.username, 1);
                             break;
                         case 2: // Atualizar estado de incidente
-                            printf("\nId do incidente: ");
+                            printf("\nId do incidente:\n ");
                             int id; scanf("%d", &id); limparBuffer();
-                            printf("\nNovo estado (0=novo, 1=em analise, 2= resolvido): ");
+                            printf("\nNovo estado (0=novo, 1=em analise, 2= resolvido):\n ");
                             int novo_estado; scanf("%d", &novo_estado); limparBuffer();
                             DATA_INCIDENTE data_resolucao = {0,0,0};
                             if (novo_estado == 2) {
@@ -189,25 +189,25 @@ int main() {
                             atualizarEstadoIncidente(incidentes, id, novo_estado, data_resolucao);
                             break;
                         case 3: // Adicionar comentário/ação
-                            printf("\nId do incidente: ");
+                            printf("\nId do incidente:\n ");
                             scanf("%d", &id); limparBuffer();
-                            printf("\nComentario/acao: ");
+                            printf("\nComentario/acao:\n ");
                             char comentario[200]; getString(comentario, sizeof(comentario));
                             adicionarComentario(incidentes, id, comentario);
                             break;
                         case 4: // Delegar incidente
-                            printf("\nId do incidente: ");
+                            printf("\nId do incidente:\n ");
                             scanf("%d", &id); limparBuffer();
-                            printf("\nNovo tecnico: ");
+                            printf("\nNovo tecnico:\n ");
                             char novo_tecnico[100]; getString(novo_tecnico, sizeof(novo_tecnico));
-                            printf("\nMotivo: ");
+                            printf("\nMotivo:\n ");
                             char motivo[200]; getString(motivo, sizeof(motivo));
                             delegarIncidente(incidentes, id, novo_tecnico, motivo);
                             break;
                         case 5: // Registar ferramenta usada
-                            printf("\nId do incidente: ");
+                            printf("\nId do incidente:\n ");
                             scanf("%d", &id); limparBuffer();
-                            printf("\nFerramenta: ");
+                            printf("\nFerramenta:\n ");
                             char ferramenta[50]; getString(ferramenta, sizeof(ferramenta));
                             adicionarFerramenta(incidentes, id, ferramenta);
                             break;
