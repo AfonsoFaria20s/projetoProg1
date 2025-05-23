@@ -20,5 +20,6 @@ int validTecnicoLogin(char *username, char *password, NODE_TECNICOS *tecnicos);
 void freeTecnicos(NODE_TECNICOS *head);
 void menuTecnico(int *opt);
 int ativarTecnico(NODE_TECNICOS *tecnicos, char username[]);
+void listarTecnicos(NODE_TECNICOS *tecnicos);
 
 #endif
