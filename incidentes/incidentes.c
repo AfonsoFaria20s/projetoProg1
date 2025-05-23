@@ -50,6 +50,10 @@ int addIncidente(NODE_INCIDENTE **incidentes, INCIDENTE newIncidente) {
     novo->incidente = newIncidente;
     novo->next = NULL;
 
+    // Inicializar contadores para evitar crash
+    novo->incidente.ferramentas_count = 0;
+    novo->incidente.historico_count = 0;
+
     if (*incidentes == NULL) {
         *incidentes = novo;
     } else {
@@ -103,7 +107,17 @@ void printIncidentes(NODE_INCIDENTE *incidentes, char username[], int tecnicoSpe
         }
         printf("\nId: %i", incidentes->incidente.id);
         printf("\nNome: %s", incidentes->incidente.nome);
+        printf("\nComentario: %s", incidentes->incidente.historico);
         printf("\nTecnico atribuido: %s", incidentes->incidente.tecnico_atribuido);
+        printf("\nFerramentas utilizadas:");
+        if (incidentes->incidente.ferramentas_count == 0) {
+            printf(" Nenhuma");
+        } else {
+            for (int i = 0; i < incidentes->incidente.ferramentas_count; i++) {
+                printf(" %s", incidentes->incidente.ferramentas[i]);
+                if (i < incidentes->incidente.ferramentas_count - 1) printf(",");
+            }
+        }
         printf("\nEstado: %d", incidentes->incidente.estado);
         printf("\nSeveridade: %d", incidentes->incidente.severidade);
         printf("\nTipo: %d", incidentes->incidente.tipo);
@@ -213,7 +227,7 @@ void gerarRelatorioMensal(NODE_INCIDENTE *inc, int mes, int ano, const char *fic
     FILE *fp = fopen(ficheiro, "w");
     while (inc) {
         if (inc->incidente.data_criacao.mes == mes && inc->incidente.data_criacao.ano == ano)
-            fprintf(fp, "Id: %d, Nome: %s, Estado: %d\n", inc->incidente.id, inc->incidente.nome, inc->incidente.estado);
+            fprintf(fp, "-> Id: %d, Nome: %s, Comentario: %s, Estado: %d\n", inc->incidente.id, inc->incidente.nome, inc->incidente.historico, inc->incidente.estado);
         inc = inc->next;
     }
     fclose(fp);

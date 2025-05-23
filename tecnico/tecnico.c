@@ -82,6 +82,10 @@ void freeTecnicos(NODE_TECNICOS *head) {
 void menuTecnico(int *opt) {
     printf("\n--< Menu Tecnico >--");
     printf("\n1 - Visualizar incidentes atribuidos");
+    printf("\n2 - Atualizar estado de incidente");
+    printf("\n3 - Adicionar comentário");
+    printf("\n4 - Delegar incidente");
+    printf("\n5 - Registar ferramenta usada");
     printf("\n0 - Sair");
     printf("\nOpcao: ");
     scanf("%i", opt);
@@ -99,4 +103,12 @@ int ativarTecnico(NODE_TECNICOS *tecnicos, char username[]) {
         tecnicos = tecnicos->next;
     }
     return -1;
+}
+
+void listarTecnicos(NODE_TECNICOS *tecnicos) {
+    printf("\n--- Lista de Técnicos ---\n");
+    while (tecnicos) {
+        printf("Username: %s | Estado: %s\n", tecnicos->tecnico.user, tecnicos->tecnico.isAtivo ? "Ativo" : "Inativo");
+        tecnicos = tecnicos->next;
+    }
 }

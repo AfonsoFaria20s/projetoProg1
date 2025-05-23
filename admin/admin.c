@@ -75,12 +75,17 @@ void freeAdmins(ADMIN *admins) {
 void menuAdmin(int *opt) {
     printf("\n--- Menu Administrador ---");
     printf("\n1 - Validar Tecnico");
-    printf("\n2 - Adicionar incidente");
-    printf("\n3 - Listar incidentes");
-    printf("\n4 - Remover incidente");
-    printf("\n5 - Listar incidentes por estado");
-    printf("\n6 - Listar incidentes por severidade");
-    printf("\n7 - Listar incidentes por tipo");
+    printf("\n2 - Listar tecnicos");
+    printf("\n3 - Adicionar incidente");
+    printf("\n4 - Listar incidentes");
+    printf("\n5 - Remover incidente");
+    printf("\n6 - Listar incidentes por estado");
+    printf("\n7 - Listar incidentes por severidade");
+    printf("\n8 - Listar incidentes por tipo");
+    printf("\n9 - Ordenar por severidade");
+    printf("\n10 - Gerar relatorio mensal");
+    printf("\n11 - Tempo medio de resolucao por tecnico");
+    printf("\n12 - Filtrar por intervalo de datas");
     printf("\n0 - Sair");
     printf("\nOpcao: ");
     scanf("%d", opt);
