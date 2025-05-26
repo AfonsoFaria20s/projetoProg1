@@ -118,7 +118,16 @@ void printIncidentes(NODE_INCIDENTE *incidentes, char username[], int tecnicoSpe
                 if (i < incidentes->incidente.ferramentas_count - 1) printf(",");
             }
         }
-        printf("\nEstado: %d", incidentes->incidente.estado);
+        printf("\nEstado: ");
+        if(incidentes->incidente.estado==0) {
+            printf("Novo\n");
+        } else if(incidentes->incidente.estado==1) {
+            printf("Em resolucao\n");
+        } else if(incidentes->incidente.estado==2) {
+            printf("Resolvido");
+        } else {
+            printf("Estado nao reconhecido\n");
+        }
         printf("\nSeveridade: %d", incidentes->incidente.severidade);
         printf("\nTipo: %d", incidentes->incidente.tipo);
         printf("\nData: %i/%i/%i", incidentes->incidente.data_criacao.dia, incidentes->incidente.data_criacao.mes, incidentes->incidente.data_criacao.ano);
