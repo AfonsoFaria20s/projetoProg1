@@ -75,9 +75,9 @@ int main() {
                         getString(auxIncidente.nome, sizeof(auxIncidente.nome));
                         printf("\nTecnico responsavel:\n-> ");
                         getString(auxIncidente.tecnico_atribuido, sizeof(auxIncidente.tecnico_atribuido));
-                        printf("\nSeveridade:\n-> ");
+                        printf("\nSeveridade (1-baixa; 2-media; 3-alta)\n-> ");
                         scanf("%i", &auxIncidente.severidade);
-                        printf("\nTipo:\n-> ");
+                        printf("\nTipo (1-Phishing; 2-Malware; 3-Acesso nao autorizado; 4-Falha de conexao)\n-> ");
                         scanf("%i", &auxIncidente.tipo);
                         limparBuffer();
 
