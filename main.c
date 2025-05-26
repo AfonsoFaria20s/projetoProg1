@@ -38,7 +38,7 @@ int main() {
         if (admin) {
             int opt = 1;
             if (admin->firstTime == 1) {
-                printf("Primeiro login, altere a password: ");
+                printf("\nPrimeiro login, altere a password: ");
                 getString(login.password, sizeof(login.password));
                 updateAdminPassword(admins, login.username, login.password);
                 printf("Password alterada!\n");
