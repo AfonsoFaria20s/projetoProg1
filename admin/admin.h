@@ -21,6 +21,8 @@ typedef struct admin {
 ADMIN* initAdmins();
 void freeAdmins(ADMIN *head);
 ADMIN* findAdmin(ADMIN *admins, const char *username);
-void updateAdminPassword(ADMIN *admins, const char *username, const char *newPassword);
+int saveAdminsToFile(ADMIN *admins);
+int updateAdminPassword(ADMIN *admins, const char *username, const char *newPassword);
+void menuAdmin(int *opt);
 
 #endif

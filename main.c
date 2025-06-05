@@ -25,14 +25,6 @@ typedef struct {
 } LOGIN;
 
 /**
- * @brief Limpa o buffer do stdin para evitar problemas de leitura.
- */
-void limparBuffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
-
-/**
  * @brief Função principal do programa.
  * 
  * Gera o ciclo de login e apresenta menus diferentes para administradores e técnicos.
@@ -134,23 +126,23 @@ int main() {
                         limparBuffer();
                         break;
                     case 6: // Listar incidentes por estado
-                        printf("Estado (0=novo, 1=em analise, 2= resolvido):\n");
+                        printf("\nEstado (0=novo, 1=em analise, 2= resolvido):\n-> ");
                         int estado; scanf("%d", &estado); limparBuffer();
                         printIncidentesPorEstado(incidentes, estado);
                         break;
                     case 7: // Listar incidentes por severidade
-                        printf("Severidade (1=baixa, 2=media, 3=alta):\n");
+                        printf("\nSeveridade (1=baixa, 2=media, 3=alta):\n->");
                         int sev; scanf("%d", &sev); limparBuffer();
                         printIncidentesPorSeveridade(incidentes, sev);
                         break;
                     case 8: // Listar incidentes por tipo
-                        printf("Tipo (1=Phishing, 2=Malware, 3=Acesso nao autorizado, 4=Falha conexao):\n");
+                        printf("\nTipo (1=Phishing, 2=Malware, 3=Acesso nao autorizado, 4=Falha conexao):\n->");
                         int tipo; scanf("%d", &tipo); limparBuffer();
                         printIncidentesPorTipo(incidentes, tipo);
                         break;
                     case 9: // Ordenar incidentes por severidade
                         incidentes = ordenarPorSeveridade(incidentes);
-                        printf("Incidentes ordenados por severidade.\n");
+                        printf("\nIncidentes ordenados por severidade.\n");
                         break;
                     case 10: // Gerar relatório mensal
                         // Gera nome do ficheiro com data/hora

@@ -130,7 +130,7 @@ void menuTecnico(int *opt) {
     printf("\n--< Menu Tecnico >--");
     printf("\n1 - Visualizar incidentes atribuidos");
     printf("\n2 - Atualizar estado de incidente");
-    printf("\n3 - Adicionar comentário");
+    printf("\n3 - Adicionar comentario");
     printf("\n4 - Delegar incidente");
     printf("\n5 - Registar ferramenta usada");
     printf("\n0 - Sair");
@@ -163,7 +163,7 @@ int ativarTecnico(NODE_TECNICOS *tecnicos, char username[]) {
  * @param tecnicos Ponteiro para o início da lista.
  */
 void listarTecnicos(NODE_TECNICOS *tecnicos) {
-    printf("\n--- Lista de Técnicos ---\n");
+    printf("\n--- Lista de Tecnicos ---\n");
     while (tecnicos) {
         printf("Username: %s | Estado: %s\n", tecnicos->tecnico.user, tecnicos->tecnico.isAtivo ? "Ativo" : "Inativo");
         tecnicos = tecnicos->next;

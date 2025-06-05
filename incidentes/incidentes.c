@@ -142,13 +142,13 @@ void printIncidentes(NODE_INCIDENTE *incidentes, char username[], int tecnicoSpe
         }
         printf("\nEstado: ");
         if(incidentes->incidente.estado==0) {
-            printf("Novo\n");
+            printf("Novo");
         } else if(incidentes->incidente.estado==1) {
-            printf("Em resolucao\n");
+            printf("Em resolucao");
         } else if(incidentes->incidente.estado==2) {
             printf("Resolvido");
         } else {
-            printf("Estado nao reconhecido\n");
+            printf("Estado nao reconhecido");
         }
         printf("\nSeveridade: %d", incidentes->incidente.severidade);
         printf("\nTipo: %d", incidentes->incidente.tipo);
