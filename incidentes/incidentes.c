@@ -13,8 +13,11 @@
 #include "incidentes.h"
 
 #define INCIDENTES_PATH "dados/incidentes.dat"
-
-// Inicializa a lista ligada de incidentes a partir do ficheiro binário
+// Implementação de cada função, sempre com comentários explicativos:
+/**
+ * @brief Inicializa a lista ligada de incidentes a partir do ficheiro binário.
+ * @return Ponteiro para o início da lista ligada de incidentes.
+ */
 NODE_INCIDENTE* initIncidentes() {
     FILE *fp = fopen(INCIDENTES_PATH, "rb");
     if (fp == NULL) {
@@ -51,7 +54,12 @@ NODE_INCIDENTE* initIncidentes() {
     return head;
 }
 
-// Adiciona um novo incidente à lista ligada
+/**
+ * @brief Adiciona um novo incidente à lista ligada.
+ * @param incidentes Ponteiro para o início da lista.
+ * @param newIncidente Estrutura INCIDENTE a adicionar.
+ * @return 0 em caso de sucesso, -1 em caso de erro.
+ */
 int addIncidente(NODE_INCIDENTE **incidentes, INCIDENTE newIncidente) {
     NODE_INCIDENTE *novo = malloc(sizeof(NODE_INCIDENTE));
     if (!novo) return -1;
@@ -107,7 +115,12 @@ void saveIncidentesToFile(NODE_INCIDENTE *incidentes) {
     fclose(fp);
 }
 
-// Listagem e filtragem
+/**
+ * @brief Imprime a lista de incidentes ou filtra por técnico.
+ * @param incidentes Ponteiro para o início da lista.
+ * @param username Nome do técnico para filtragem.
+ * @param tecnicoSpecific 1 se a filtragem por técnico é específica, 0 caso contrário.
+ */
 void printIncidentes(NODE_INCIDENTE *incidentes, char username[], int tecnicoSpecific) {
     while (incidentes) {
         if (tecnicoSpecific == 1 && strcmp(incidentes->incidente.tecnico_atribuido, username) != 0) {
@@ -145,6 +158,11 @@ void printIncidentes(NODE_INCIDENTE *incidentes, char username[], int tecnicoSpe
     }
 }
 
+/**
+ * @brief Filtra e imprime incidentes por estado.
+ * @param inc Ponteiro para o início da lista de incidentes.
+ * @param estado Estado pelo qual filtrar (0: Novo, 1: Em resolução, 2: Resolvido).
+ */
 void printIncidentesPorEstado(NODE_INCIDENTE *inc, int estado) {
     while (inc) {
         if (inc->incidente.estado == estado)
@@ -152,6 +170,12 @@ void printIncidentesPorEstado(NODE_INCIDENTE *inc, int estado) {
         inc = inc->next;
     }
 }
+
+/**
+ * @brief Filtra e imprime incidentes por severidade.
+ * @param inc Ponteiro para o início da lista de incidentes.
+ * @param severidade Severidade pelo qual filtrar.
+ */
 void printIncidentesPorSeveridade(NODE_INCIDENTE *inc, int severidade) {
     while (inc) {
         if (inc->incidente.severidade == severidade)
@@ -159,6 +183,12 @@ void printIncidentesPorSeveridade(NODE_INCIDENTE *inc, int severidade) {
         inc = inc->next;
     }
 }
+
+/**
+ * @brief Filtra e imprime incidentes por tipo.
+ * @param inc Ponteiro para o início da lista de incidentes.
+ * @param tipo Tipo pelo qual filtrar.
+ */
 void printIncidentesPorTipo(NODE_INCIDENTE *inc, int tipo) {
     while (inc) {
         if (inc->incidente.tipo == tipo)
@@ -166,6 +196,13 @@ void printIncidentesPorTipo(NODE_INCIDENTE *inc, int tipo) {
         inc = inc->next;
     }
 }
+
+/**
+ * @brief Filtra e imprime incidentes dentro de um intervalo de datas.
+ * @param inc Ponteiro para o início da lista de incidentes.
+ * @param inicio Data de início do intervalo.
+ * @param fim Data de fim do intervalo.
+ */
 void printIncidentesPorIntervalo(NODE_INCIDENTE *inc, DATA_INCIDENTE inicio, DATA_INCIDENTE fim) {
     while (inc) {
         if (calculaDias(inicio, inc->incidente.data_criacao) >= 0 &&
@@ -252,7 +289,11 @@ void gerarRelatorioMensal(NODE_INCIDENTE *inc, int mes, int ano, const char *fic
     printf("Relatorio gerado!\n");
 }
 
-// Tempo médio de resolução por técnico
+/**
+ * @brief Calcula o tempo médio de resolução de incidentes para um técnico específico.
+ * @param inc Ponteiro para o início da lista de incidentes.
+ * @param tecnico Nome do técnico para o qual calcular o tempo médio de resolução.
+ */
 void tempoMedioResolucaoPorTecnico(NODE_INCIDENTE *inc, char *tecnico) {
     int total = 0, count = 0;
     while (inc) {
@@ -269,7 +310,12 @@ void tempoMedioResolucaoPorTecnico(NODE_INCIDENTE *inc, char *tecnico) {
         printf("Nenhum incidente resolvido por esse tecnico.\n");
 }
 
-// Adicionar comentário/ação
+/**
+ * @brief Adiciona um comentário ao histórico de um incidente.
+ * @param incidentes Ponteiro para o início da lista de incidentes.
+ * @param id ID do incidente ao qual o comentário será adicionado.
+ * @param comentario Texto do comentário a ser adicionado.
+ */
 void adicionarComentario(NODE_INCIDENTE *incidentes, int id, const char *comentario) {
     while (incidentes) {
         if (incidentes->incidente.id == id) {
@@ -285,7 +331,12 @@ void adicionarComentario(NODE_INCIDENTE *incidentes, int id, const char *comenta
     }
 }
 
-// Adicionar ferramenta usada
+/**
+ * @brief Adiciona uma ferramenta à lista de ferramentas usadas em um incidente.
+ * @param incidentes Ponteiro para o início da lista de incidentes.
+ * @param id ID do incidente ao qual a ferramenta será adicionada.
+ * @param ferramenta Nome da ferramenta a ser adicionada.
+ */
 void adicionarFerramenta(NODE_INCIDENTE *incidentes, int id, const char *ferramenta) {
     while (incidentes) {
         if (incidentes->incidente.id == id) {
@@ -301,7 +352,13 @@ void adicionarFerramenta(NODE_INCIDENTE *incidentes, int id, const char *ferrame
     }
 }
 
-// Delegar incidente
+/**
+ * @brief Delegar um incidente para outro técnico.
+ * @param incidentes Ponteiro para o início da lista de incidentes.
+ * @param id ID do incidente a ser delegado.
+ * @param novo_tecnico Nome do novo técnico responsável pelo incidente.
+ * @param motivo Motivo da delegação.
+ */
 void delegarIncidente(NODE_INCIDENTE *incidentes, int id, const char *novo_tecnico, const char *motivo) {
     while (incidentes) {
         if (incidentes->incidente.id == id) {
@@ -317,7 +374,11 @@ void delegarIncidente(NODE_INCIDENTE *incidentes, int id, const char *novo_tecni
     }
 }
 
-// Obter último id
+/**
+ * @brief Obtém o último ID utilizado na lista de incidentes.
+ * @param incidentes Ponteiro para o início da lista de incidentes.
+ * @return O último ID utilizado.
+ */
 int getLastId(NODE_INCIDENTE *incidentes) {
     if (incidentes == NULL) return 0;
     NODE_INCIDENTE *curr = incidentes;
@@ -327,11 +388,23 @@ int getLastId(NODE_INCIDENTE *incidentes) {
     return curr->incidente.id;
 }
 
-// Calcula diferença de dias entre duas datas (simples, não considera meses diferentes corretamente)
+/**
+ * @brief Calcula a diferença em dias entre duas datas.
+ * @param inicio Data de início.
+ * @param fim Data de fim.
+ * @return Diferença em dias entre as duas datas.
+ */
 int calculaDias(DATA_INCIDENTE inicio, DATA_INCIDENTE fim) {
     return (fim.ano - inicio.ano) * 365 + (fim.mes - inicio.mes) * 30 + (fim.dia - inicio.dia);
 }
 
+/**
+ * @brief Atualiza o estado de um incidente e, se resolvido, a data de resolução.
+ * @param incidentes Ponteiro para o início da lista de incidentes.
+ * @param id ID do incidente a ser atualizado.
+ * @param novo_estado Novo estado do incidente.
+ * @param data_resolucao Data de resolução, se aplicável.
+ */
 void atualizarEstadoIncidente(NODE_INCIDENTE *incidentes, int id, int novo_estado, DATA_INCIDENTE data_resolucao) {
     while (incidentes) {
         if (incidentes->incidente.id == id) {

@@ -13,11 +13,16 @@
 
 #define FILE_PATH "dados/tecnico_list.dat"
 
+/**
+ * @brief Inicializa a lista ligada de técnicos a partir do ficheiro binário.
+ * @return Ponteiro para o início da lista ligada de técnicos.
+ */
 NODE_TECNICOS* initTecnicos() {
     FILE *fp = fopen(FILE_PATH, "rb");
     NODE_TECNICOS *head = NULL, *tail = NULL;
     if (fp) {
         TECNICO temp;
+        // Lê cada técnico do ficheiro e adiciona à lista ligada
         while (fread(&temp, sizeof(TECNICO), 1, fp)) {
             NODE_TECNICOS *newNode = malloc(sizeof(NODE_TECNICOS));
             if (!newNode) break;
@@ -31,9 +36,15 @@ NODE_TECNICOS* initTecnicos() {
     return head;
 }
 
+/**
+ * @brief Guarda a lista de técnicos no ficheiro binário.
+ * @param tecnicos Ponteiro para o início da lista.
+ * @return 0 em caso de sucesso, -1 em caso de erro.
+ */
 int saveTecnicosToFile(NODE_TECNICOS *tecnicos) {
     FILE *fp = fopen(FILE_PATH, "wb");
     if (!fp) return -1;
+    // Escreve cada técnico no ficheiro
     while (tecnicos) {
         fwrite(&tecnicos->tecnico, sizeof(TECNICO), 1, fp);
         tecnicos = tecnicos->next;
@@ -42,6 +53,12 @@ int saveTecnicosToFile(NODE_TECNICOS *tecnicos) {
     return 0;
 }
 
+/**
+ * @brief Verifica se um técnico existe pelo username.
+ * @param username Nome do técnico.
+ * @param tecnicos Ponteiro para o início da lista.
+ * @return 1 se existe, 0 caso contrário.
+ */
 int tecnicoExists(const char *username, NODE_TECNICOS *tecnicos) {
     while (tecnicos) {
         if (strcmp(tecnicos->tecnico.user, username) == 0)
@@ -51,12 +68,19 @@ int tecnicoExists(const char *username, NODE_TECNICOS *tecnicos) {
     return 0;
 }
 
+/**
+ * @brief Regista um novo técnico na lista ligada.
+ * @param username Nome do técnico.
+ * @param password Palavra-passe.
+ * @param tecnicos Ponteiro para o início da lista.
+ * @return 1 em caso de sucesso, 0 em caso de erro.
+ */
 int registerTecnico(const char *username, const char *password, NODE_TECNICOS **tecnicos) {
     NODE_TECNICOS *newNode = malloc(sizeof(NODE_TECNICOS));
     if (!newNode) return 0;
     strncpy(newNode->tecnico.user, username, sizeof(newNode->tecnico.user));
     strncpy(newNode->tecnico.password, password, sizeof(newNode->tecnico.password));
-    newNode->tecnico.isAtivo = 0;
+    newNode->tecnico.isAtivo = 0; // Novo técnico começa como inativo
     newNode->next = NULL;
     if (!*tecnicos)
         *tecnicos = newNode;
@@ -69,6 +93,13 @@ int registerTecnico(const char *username, const char *password, NODE_TECNICOS **
     return 1;
 }
 
+/**
+ * @brief Valida o login de um técnico.
+ * @param username Nome do técnico.
+ * @param password Palavra-passe.
+ * @param tecnicos Ponteiro para o início da lista.
+ * @return 1 se válido, 0 caso contrário.
+ */
 int validTecnicoLogin(char *username, char *password, NODE_TECNICOS *tecnicos) {
     while (tecnicos) {
         if (strcmp(tecnicos->tecnico.user, username) == 0 &&
@@ -79,6 +110,10 @@ int validTecnicoLogin(char *username, char *password, NODE_TECNICOS *tecnicos) {
     return 0;
 }
 
+/**
+ * @brief Liberta a memória ocupada pela lista de técnicos.
+ * @param head Ponteiro para o início da lista.
+ */
 void freeTecnicos(NODE_TECNICOS *head) {
     while (head) {
         NODE_TECNICOS *temp = head;
@@ -87,6 +122,10 @@ void freeTecnicos(NODE_TECNICOS *head) {
     }
 }
 
+/**
+ * @brief Apresenta o menu de opções para o técnico.
+ * @param opt Ponteiro para a opção escolhida.
+ */
 void menuTecnico(int *opt) {
     printf("\n--< Menu Tecnico >--");
     printf("\n1 - Visualizar incidentes atribuidos");
@@ -100,6 +139,12 @@ void menuTecnico(int *opt) {
     while (getchar() != '\n');
 }
 
+/**
+ * @brief Ativa um técnico (torna-o ativo).
+ * @param tecnicos Ponteiro para o início da lista.
+ * @param username Nome do técnico.
+ * @return 1 se ativado, 0 se já estava ativo, -1 se não encontrado.
+ */
 int ativarTecnico(NODE_TECNICOS *tecnicos, char username[]) {
     while(tecnicos) {
         if(strcmp(tecnicos->tecnico.user, username)==0) {
@@ -113,6 +158,10 @@ int ativarTecnico(NODE_TECNICOS *tecnicos, char username[]) {
     return -1;
 }
 
+/**
+ * @brief Lista todos os técnicos registados.
+ * @param tecnicos Ponteiro para o início da lista.
+ */
 void listarTecnicos(NODE_TECNICOS *tecnicos) {
     printf("\n--- Lista de Técnicos ---\n");
     while (tecnicos) {

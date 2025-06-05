@@ -1,17 +1,31 @@
+/**
+ * @file tecnico.h
+ * @brief Definições e protótipos para gestão de técnicos.
+ */
+
 #ifndef TECNICO_H
 #define TECNICO_H
 
-typedef struct tecnico {
+/**
+ * @struct TECNICO
+ * @brief Estrutura que representa um técnico.
+ */
+typedef struct {
     char user[100];
     char password[50];
     int isAtivo;
 } TECNICO;
 
-typedef struct node_tecnico {
+/**
+ * @struct NODE_TECNICOS
+ * @brief Nó da lista ligada de técnicos.
+ */
+typedef struct node_tecnicos {
     TECNICO tecnico;
-    struct node_tecnico *next;
+    struct node_tecnicos *next;
 } NODE_TECNICOS;
 
+// Protótipos das funções
 NODE_TECNICOS* initTecnicos();
 int saveTecnicosToFile(NODE_TECNICOS *tecnicos);
 int tecnicoExists(const char *username, NODE_TECNICOS *tecnicos);

@@ -1,18 +1,26 @@
+/**
+ * @file admin.h
+ * @brief Definições e protótipos para gestão de administradores.
+ */
+
 #ifndef ADMIN_H
 #define ADMIN_H
 
+/**
+ * @struct ADMIN
+ * @brief Estrutura que representa um administrador.
+ */
 typedef struct admin {
-    char user[100];
-    char password[100];
+    char username[100];
+    char password[50];
     int firstTime;
     struct admin *next;
 } ADMIN;
 
+// Protótipos das funções
 ADMIN* initAdmins();
-int saveAdminsToFile(ADMIN *admins);
+void freeAdmins(ADMIN *head);
 ADMIN* findAdmin(ADMIN *admins, const char *username);
-int updateAdminPassword(ADMIN *admins, const char *username, const char *newPassword);
-void freeAdmins(ADMIN *admins);
-void menuAdmin(int *opt);
+void updateAdminPassword(ADMIN *admins, const char *username, const char *newPassword);
 
 #endif

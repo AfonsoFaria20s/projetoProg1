@@ -25,7 +25,7 @@ ADMIN* initAdmins() {
 
     if (!head) {
         ADMIN *newAdmin = malloc(sizeof(ADMIN));
-        strcpy(newAdmin->user, "admin");
+        strcpy(newAdmin->username, "admin");
         strcpy(newAdmin->password, "admin");
         newAdmin->firstTime = 1;
         newAdmin->next = NULL;
@@ -48,7 +48,7 @@ int saveAdminsToFile(ADMIN *admins) {
 
 ADMIN* findAdmin(ADMIN *admins, const char *username) {
     while (admins) {
-        if (strcmp(admins->user, username) == 0)
+        if (strcmp(admins->username, username) == 0)
             return admins;
         admins = admins->next;
     }

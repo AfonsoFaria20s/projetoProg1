@@ -1,7 +1,7 @@
 /**
  * @file main.c
  * @brief Programa principal para gestão de incidentes de segurança.
- * 
+ *
  * Permite a gestão de incidentes, técnicos e administradores, com funcionalidades
  * de registo, consulta, filtragem, atualização, delegação e geração de relatórios.
  * Utiliza listas ligadas para gestão dinâmica e ficheiros binários para persistência.
@@ -54,14 +54,16 @@ int main() {
     int sair = 0;
 
     while (!sair) {
+        // --- LOGIN ---
         printf("\n--< Area de Login >--\nUsername: ");
         fgets(login.username, sizeof(login.username), stdin);
         login.username[strcspn(login.username, "\n")] = '\0';
 
-        // ADMIN
+        // --- VERIFICA SE É ADMIN ---
         ADMIN *admin = findAdmin(admins, login.username);
         if (admin) {
             int opt = 1;
+            // Se for o primeiro login do admin, obriga a trocar a password
             if (admin->firstTime == 1) {
                 printf("\nPrimeiro login, altere a password: ");
                 getString(login.password, sizeof(login.password));
@@ -72,16 +74,17 @@ int main() {
             fgets(login.password, sizeof(login.password), stdin);
             login.password[strcspn(login.password, "\n")] = '\0';
 
+            // Validação da password do admin
             if (strcmp(admin->password, login.password) != 0) {
                 printf("Password incorreta!\n");
                 continue;
             }
 
-            // Menu do administrador
+            // --- MENU ADMINISTRADOR ---
             while (opt != 0) {
                 menuAdmin(&opt);
                 switch (opt) {
-                    case 1: // Validar tecnico
+                    case 1: // Validar técnico
                         printf("\nUsername do tecnico a validar: ");
                         getString(login.username, sizeof(login.username));
                         int res = ativarTecnico(tecnicos, login.username);
@@ -93,10 +96,11 @@ int main() {
                             printf("\nErro ao validar tecnico!");
                         }
                         break;
-                    case 2:
+                    case 2: // Listar técnicos
                         listarTecnicos(tecnicos);
                         break;
                     case 3: // Adicionar incidente
+                        // Recolhe dados do incidente
                         printf("\nNome do incidente:\n-> ");
                         getString(auxIncidente.nome, sizeof(auxIncidente.nome));
                         printf("\nTecnico responsavel:\n-> ");
@@ -107,49 +111,49 @@ int main() {
                         scanf("%i", &auxIncidente.tipo);
                         limparBuffer();
                         
+                        // Gera novo ID e data de criação
                         auxIncidente.id = getLastId(incidentes) + 1;
-
                         time_t t = time(NULL);
                         struct tm tm = *localtime(&t);  
                         data_incidente.dia = tm.tm_mday;
                         data_incidente.mes = tm.tm_mon + 1;
                         data_incidente.ano = tm.tm_year + 1900;
-
                         auxIncidente.data_criacao = data_incidente;
                         auxIncidente.estado = 0;
                         
                         addIncidente(&incidentes, auxIncidente);
                         printf("\nIncidente adicionado com sucesso!\n");
                         break;
-                    case 4: // Listar incidentes
+                    case 4: // Listar todos os incidentes
                         printIncidentes(incidentes, login.username, 0);
                         break;
-                    case 5: // Remover incidentes
+                    case 5: // Remover incidente
                         printf("\nId do incidente a remover:\n ");
                         scanf("%i", &id);
                         removerIncidente(&incidentes, id);
                         limparBuffer();
                         break;
-                    case 6: // Listar por estado
+                    case 6: // Listar incidentes por estado
                         printf("Estado (0=novo, 1=em analise, 2= resolvido):\n");
                         int estado; scanf("%d", &estado); limparBuffer();
                         printIncidentesPorEstado(incidentes, estado);
                         break;
-                    case 7: // Listar por severidade
+                    case 7: // Listar incidentes por severidade
                         printf("Severidade (1=baixa, 2=media, 3=alta):\n");
                         int sev; scanf("%d", &sev); limparBuffer();
                         printIncidentesPorSeveridade(incidentes, sev);
                         break;
-                    case 8: // Listar por tipo
+                    case 8: // Listar incidentes por tipo
                         printf("Tipo (1=Phishing, 2=Malware, 3=Acesso nao autorizado, 4=Falha conexao):\n");
                         int tipo; scanf("%d", &tipo); limparBuffer();
                         printIncidentesPorTipo(incidentes, tipo);
                         break;
-                    case 9: // Ordenar por severidade
+                    case 9: // Ordenar incidentes por severidade
                         incidentes = ordenarPorSeveridade(incidentes);
                         printf("Incidentes ordenados por severidade.\n");
                         break;
                     case 10: // Gerar relatório mensal
+                        // Gera nome do ficheiro com data/hora
                         printf("\nMes: "); int mes; scanf("%d", &mes);
                         printf("\nAno: "); int ano; scanf("%d", &ano); limparBuffer();
                         char nomeRelatorio[100];
@@ -167,14 +171,14 @@ int main() {
                         char tecnico[100]; getString(tecnico, sizeof(tecnico));
                         tempoMedioResolucaoPorTecnico(incidentes, tecnico);
                         break;
-                    case 12: // Filtrar por intervalo de datas
+                    case 12: // Filtrar incidentes por intervalo de datas
                         {
                             DATA_INCIDENTE inicio, fim;
-                        printf("\nData inicio (dd mm aaaa): ");
-                        scanf("%d %d %d", &inicio.dia, &inicio.mes, &inicio.ano);
-                        printf("\nData fim (dd mm aaaa): ");
-                        scanf("%d %d %d", &fim.dia, &fim.mes, &fim.ano); limparBuffer();
-                        printIncidentesPorIntervalo(incidentes, inicio, fim);
+                            printf("\nData inicio (dd mm aaaa): ");
+                            scanf("%d %d %d", &inicio.dia, &inicio.mes, &inicio.ano);
+                            printf("\nData fim (dd mm aaaa): ");
+                            scanf("%d %d %d", &fim.dia, &fim.mes, &fim.ano); limparBuffer();
+                            printIncidentesPorIntervalo(incidentes, inicio, fim);
                         }
                         break;
                     case 0:
@@ -185,14 +189,16 @@ int main() {
                 }
             }
         }
-        // TECNICO REGISTADO
+        // --- VERIFICA SE É TÉCNICO REGISTADO ---
         else if (tecnicoExists(login.username, tecnicos)) {
             printf("\nPassword: ");
             fgets(login.password, sizeof(login.password), stdin);
             login.password[strcspn(login.password, "\n")] = '\0';
+            // Validação do login do técnico
             if (validTecnicoLogin(login.username, login.password, tecnicos)) {
                 int opt = 1;
                 printf("\nBem-vindo, %s!\n", login.username);
+                // --- MENU TÉCNICO ---
                 while (opt != 0) {
                     menuTecnico(&opt);
                     switch (opt) {
@@ -205,6 +211,7 @@ int main() {
                             printf("\nNovo estado (0=novo, 1=em analise, 2= resolvido):\n ");
                             int novo_estado; scanf("%d", &novo_estado); limparBuffer();
                             DATA_INCIDENTE data_resolucao = {0,0,0};
+                            // Se resolver, regista data de resolução
                             if (novo_estado == 2) {
                                 time_t t = time(NULL);
                                 struct tm tm = *localtime(&t);
@@ -261,7 +268,7 @@ int main() {
                 printf("\nPalavra passe errada!\n");
             }
         }
-        // TECNICO NAO REGISTADO
+        // --- SE NÃO ESTÁ REGISTADO, PERMITE REGISTO DE NOVO TÉCNICO ---
         else {
             printf("\nNao esta registado. Deseja registar-se? (sim/nao): ");
             fgets(resposta, sizeof(resposta), stdin);
@@ -287,7 +294,7 @@ int main() {
                 printf("\nOperacao cancelada.\n");
             }
         }
-        // Perguntar se quer terminar o programa ou voltar ao login
+        // --- PERGUNTA SE O UTILIZADOR QUER TERMINAR O PROGRAMA ---
         printf("\nDeseja terminar o programa? (s/n): ");
         fgets(resposta, sizeof(resposta), stdin);
         resposta[strcspn(resposta, "\n")] = '\0';
@@ -296,7 +303,7 @@ int main() {
         }
     }
 
-    // Libertar memória antes de sair
+    // --- LIBERTA MEMÓRIA ANTES DE SAIR ---
     freeTecnicos(tecnicos);
     freeAdmins(admins);
     return 0;
