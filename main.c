@@ -1,3 +1,12 @@
+/**
+ * @file main.c
+ * @brief Programa principal para gestão de incidentes de segurança.
+ * 
+ * Permite a gestão de incidentes, técnicos e administradores, com funcionalidades
+ * de registo, consulta, filtragem, atualização, delegação e geração de relatórios.
+ * Utiliza listas ligadas para gestão dinâmica e ficheiros binários para persistência.
+ */
+
 #include "incidentes/incidentes.h"
 #include "tecnico/tecnico.h"
 #include "admin/admin.h"
@@ -6,17 +15,33 @@
 #include <string.h>
 #include <time.h>
 
+/**
+ * @struct LOGIN
+ * @brief Estrutura para guardar dados de login do utilizador.
+ */
 typedef struct {
-    char username[100];
-    char password[50];
+    char username[100];  ///< Nome de utilizador
+    char password[50];   ///< Palavra-passe
 } LOGIN;
 
+/**
+ * @brief Limpa o buffer do stdin para evitar problemas de leitura.
+ */
 void limparBuffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
+/**
+ * @brief Função principal do programa.
+ * 
+ * Gera o ciclo de login e apresenta menus diferentes para administradores e técnicos.
+ * Permite executar todas as operações principais do sistema.
+ * 
+ * @return int Código de saída do programa.
+ */
 int main() {
+    // Inicialização das listas ligadas a partir dos ficheiros binários
     ADMIN *admins = initAdmins();
     NODE_TECNICOS *tecnicos = initTecnicos();
     NODE_INCIDENTE *incidentes = initIncidentes();
@@ -52,6 +77,7 @@ int main() {
                 continue;
             }
 
+            // Menu do administrador
             while (opt != 0) {
                 menuAdmin(&opt);
                 switch (opt) {
@@ -80,7 +106,7 @@ int main() {
                         printf("\nTipo (1-Phishing; 2-Malware; 3-Acesso nao autorizado; 4-Falha de conexao)\n-> ");
                         scanf("%i", &auxIncidente.tipo);
                         limparBuffer();
-
+                        
                         auxIncidente.id = getLastId(incidentes) + 1;
 
                         time_t t = time(NULL);
@@ -124,8 +150,8 @@ int main() {
                         printf("Incidentes ordenados por severidade.\n");
                         break;
                     case 10: // Gerar relatório mensal
-                        printf("Mes: "); int mes; scanf("%d", &mes);
-                        printf("Ano: "); int ano; scanf("%d", &ano); limparBuffer();
+                        printf("\nMes: "); int mes; scanf("%d", &mes);
+                        printf("\nAno: "); int ano; scanf("%d", &ano); limparBuffer();
                         char nomeRelatorio[100];
                         sprintf(nomeRelatorio, "relatorio-%02i-%02i_%02i-%02i-%04i.txt",
                             tm.tm_hour,
@@ -137,16 +163,16 @@ int main() {
                         gerarRelatorioMensal(incidentes, mes, ano, nomeRelatorio);
                         break;
                     case 11: // Tempo médio de resolução por técnico
-                        printf("Username do tecnico: ");
+                        printf("\nUsername do tecnico: ");
                         char tecnico[100]; getString(tecnico, sizeof(tecnico));
                         tempoMedioResolucaoPorTecnico(incidentes, tecnico);
                         break;
                     case 12: // Filtrar por intervalo de datas
                         {
                             DATA_INCIDENTE inicio, fim;
-                        printf("Data inicio (dd mm aaaa): ");
+                        printf("\nData inicio (dd mm aaaa): ");
                         scanf("%d %d %d", &inicio.dia, &inicio.mes, &inicio.ano);
-                        printf("Data fim (dd mm aaaa): ");
+                        printf("\nData fim (dd mm aaaa): ");
                         scanf("%d %d %d", &fim.dia, &fim.mes, &fim.ano); limparBuffer();
                         printIncidentesPorIntervalo(incidentes, inicio, fim);
                         }
@@ -161,7 +187,7 @@ int main() {
         }
         // TECNICO REGISTADO
         else if (tecnicoExists(login.username, tecnicos)) {
-            printf("Password: ");
+            printf("\nPassword: ");
             fgets(login.password, sizeof(login.password), stdin);
             login.password[strcspn(login.password, "\n")] = '\0';
             if (validTecnicoLogin(login.username, login.password, tecnicos)) {
@@ -270,6 +296,7 @@ int main() {
         }
     }
 
+    // Libertar memória antes de sair
     freeTecnicos(tecnicos);
     freeAdmins(admins);
     return 0;

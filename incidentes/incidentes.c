@@ -1,3 +1,12 @@
+/**
+ * @file incidentes.c
+ * @brief Implementação das funções de gestão de incidentes.
+ *
+ * Este módulo contém funções para inicializar, adicionar, remover, listar, filtrar,
+ * ordenar, atualizar e gerar relatórios de incidentes, bem como operações auxiliares
+ * como delegação, comentários e ferramentas usadas.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

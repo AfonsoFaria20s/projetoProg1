@@ -1,3 +1,11 @@
+/**
+ * @file tecnico.c
+ * @brief Implementação das funções de gestão de técnicos.
+ *
+ * Este módulo permite inicializar, registar, validar login, ativar, listar e libertar técnicos,
+ * bem como apresentar o menu de opções para técnicos.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
